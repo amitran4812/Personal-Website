@@ -1017,7 +1017,7 @@ const REPOS = [
 })();
 
 
-  // ---------- Hero hologram: a red point cloud of the photo turns its head, then resolves into the photo ----------
+  // ---------- Hero hologram: a still red point cloud of the photo that resolves into the photo after a delay ----------
   (() => {
     const cut = document.querySelector('.cut'), img = cut && cut.querySelector('img');
     if (!cut || matchMedia('(prefers-reduced-motion: reduce)').matches || !window.fetch) return;
@@ -1063,11 +1063,10 @@ const REPOS = [
       const k = resolveAt === Infinity ? 0 : Math.min(1, (now - resolveAt) / RESOLVE);
       const settle = 1 - k * k * (3 - 2 * k);
       const intro = Math.min(1, t / 1.2);               // dots fade/assemble in at the start
-      const headYaw = Math.sin(t * 1.15) * 0.6 * settle, headPitch = Math.sin(t * 0.8 + 1) * 0.1 * settle;
-      const bodyYaw = Math.sin(t * 0.6) * 0.14 * settle;
+      const headYaw = 0, headPitch = 0, bodyYaw = 0;   // the figure stays still
       const depth = 230, f = 1100, cx = W0 / 2, headCy = neck * 0.55;
       const scanY = ((t * 0.45) % 1.25) * H0;
-      const glitch = Math.sin(t * 7.3) > 0.97 ? [H0 * ((t * 3.1) % 1), (Math.random() - .5) * 24] : null;
+      const glitch = null;
       const sz = Math.max(1.2, 1.9 * dpr * (r.width / 440));
       let j = 0;
       for (let i = 0; i < P.length; i += 4) {
@@ -1081,7 +1080,7 @@ const REPOS = [
         // assemble: dots start scattered in depth and fly into place
         const spread = (1 - intro) * (1 - intro);
         X += Math.sin(i * 12.9898) * 120 * spread; Y += Math.cos(i * 78.233) * 80 * spread;
-        const pz = f / (f - Z);
+        const pz = 1;   // flat projection: no perspective warp on the face
         let px = cx + X * pz, py = H0 * 0.5 + (Y - H0 * 0.5) * pz;
         if (glitch && Math.abs(py - glitch[0]) < 10) px += glitch[1];
         const scan = Math.max(0, 1 - Math.abs(py - scanY) / 26);
