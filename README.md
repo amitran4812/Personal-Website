@@ -45,6 +45,8 @@ npm start          # serve dist/ on $PORT (default 8080)
 - GitHub repositories shown: the `REPOS` list just above it.
 - To add a document, drop the PDF into `docs/` and add `['Name', 'docs/file.pdf', 'pages']` to a project's `docs`.
 
+- Sections are boxed panels with sideways-scrolling tiles: My Full Story, My Academic Journey So Far, My Skill Universe, My Novelty. Each tile is an `<article class="tile c-red">` in `index.html`; colour classes are `c-red`, `c-light`, `c-dark`, `c-wine`, `c-rose`, `c-ink`. Copy a tile to add one (certificates, skills, patents).
+
 ## Credits
 
 The cursor flocking motion is adapted from [Swarm Rebuild](https://github.com/JoelBastoneLopez/swarm-rebuild) (MIT License, Copyright (c) 2026 Dhvanil Patel, Copyright (c) 2026 Joel Bastone Lopez).

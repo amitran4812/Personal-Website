@@ -107,6 +107,96 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .cut.holo-out .holo-cv { opacity: 0; }
 .cut img { clip-path: inset(0 0 0 0); }
 
+/* ---------- hero v2: photo on the left, name beside it ---------- */
+.hero2 { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: center; gap: clamp(20px, 4vw, 56px); padding-block: clamp(24px, 4vw, 48px) 32px; }
+.hero2 .cut { justify-self: center; width: min(100%, 440px); margin-top: 0; }
+.hero-text { display: grid; gap: 18px; min-width: 0; position: relative; z-index: 3; }
+.name { margin: 0; font-family: var(--font-display); font-weight: 800; text-transform: uppercase; line-height: .86; letter-spacing: -.05em; display: grid; font-size: clamp(48px, 8.4vw, 128px); }
+.name .l1 { color: var(--fg); }
+.name .l2 { color: transparent; -webkit-text-stroke: 2px var(--accent-hi); font-size: 1.3em; }
+.now { margin: 0; display: inline-flex; align-items: center; gap: 10px; justify-self: start; font-weight: 600; font-size: clamp(16px, 1.7vw, 19px); padding: 10px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.now b { color: var(--accent-hi); }
+.now .dot { width: 9px; height: 9px; border-radius: 50%; background: #2ee86a; box-shadow: 0 0 0 4px rgba(46, 232, 106, .18); }
+.hero-text .tagline { max-width: 34ch; }
+@media (max-width: 800px) {
+  .hero2 { grid-template-columns: minmax(0, 1fr); }
+  .hero2 .cut { width: min(78vw, 400px); }
+}
+
+/* ---------- boxed sections with sideways-scrolling tiles ---------- */
+#story, #academics, #skills, #novelty { padding-block: clamp(28px, 4vw, 48px); }
+.panel { position: relative; border: 1px solid var(--line); border-radius: 32px; padding: clamp(20px, 3.6vw, 44px); background: radial-gradient(120% 80% at 100% 0%, rgba(227, 38, 45, .10), transparent 60%), linear-gradient(160deg, #151214, #0d0c0d); }
+.panel-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.panel-head h2 { margin: 0; }
+.panel .lede { font-size: clamp(17px, 1.8vw, 21px); line-height: 1.55; color: var(--muted); max-width: 70ch; margin: 0 0 24px; }
+.panel .lede b { color: var(--fg); font-weight: 600; }
+.sub-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 26px 0 4px; }
+.sub-head h3 { margin: 0; font: 500 12px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .16em; color: var(--accent-hi); }
+.rail-nav { display: flex; gap: 8px; }
+.rail-nav button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font-size: 16px; cursor: pointer; transition: background .2s, border-color .2s, transform .15s; }
+.rail-nav button:disabled { opacity: .35; cursor: default; }
+.rail-nav button:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
+.rail { display: flex; gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; padding: 16px 6px 22px; margin: 0 -6px; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; overscroll-behavior-x: contain; cursor: grab; }
+.rail.dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.rail::-webkit-scrollbar { height: 6px; }
+.rail::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+.rail > * { flex: 0 0 clamp(236px, 24vw, 290px); aspect-ratio: 1; scroll-snap-align: start; min-width: 0; }
+
+.tile { position: relative; border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; text-decoration: none; border: 1px solid transparent; }
+.tile .k { font: 500 11px/1.35 var(--font-mono); text-transform: uppercase; letter-spacing: .12em; opacity: .8; }
+.tile h3 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(19px, 1.8vw, 23px); line-height: 1.12; letter-spacing: -.015em; }
+.tile h3 small { opacity: .6; }
+.tile p { margin: 0; font-size: 14.5px; line-height: 1.45; opacity: .86; }
+.tile .foot { margin-top: auto; font: 500 12px/1.4 var(--font-mono); opacity: .8; }
+.tile a.foot, .tile .foot.link { text-decoration: none; opacity: 1; }
+.tile .logo { flex: none; }
+.tile .logo.wide { width: 112px; height: 44px; padding: 9px 12px; }
+.c-red { background: linear-gradient(150deg, #ff4b50, #c81e28); color: #fff; }
+.c-light { background: #f3f1f1; color: #0a0a0b; }
+.c-dark { background: #1c1a1c; color: var(--fg); border-color: var(--line); }
+.c-wine { background: linear-gradient(150deg, #4a0d13, #24070a); color: #ffe3e4; border-color: #5c1219; }
+.c-rose { background: #ffb3b5; color: #2a0609; }
+.c-ink { background: #0e0d0e; color: var(--fg); border-color: rgba(227, 38, 45, .45); }
+.tile ul { margin: 0; padding: 0; list-style: none; }
+.names li { font-family: var(--font-display); font-weight: 600; font-size: 18px; padding: 8px 0; border-top: 1px solid rgba(0,0,0,.12); display: flex; align-items: center; gap: 10px; }
+.names li img { width: 64px; height: auto; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto !important; }
+.chips li { font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.22); }
+.c-light .chips li, .c-rose .chips li { background: rgba(0,0,0,.07); border-color: rgba(0,0,0,.14); }
+.stat { justify-content: flex-end; }
+.stat strong { font-family: var(--font-display); font-weight: 800; font-size: clamp(44px, 5vw, 64px); line-height: .95; letter-spacing: -.04em; }
+.c-dark.stat strong, .c-ink.stat strong { color: var(--accent-hi); }
+.paper { padding: 0; background: #fff; }
+.paper img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.paper-cap { position: absolute; left: 12px; right: 12px; bottom: 12px; padding: 10px 14px; border-radius: 14px; background: rgba(10,10,11,.88); color: #fff; font: 500 13px var(--font-mono); text-align: center; }
+.rail .fig { padding: 0; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; margin: 0; }
+.rail .fig img { height: 72%; flex: none; }
+.rail .fig figcaption { padding: 12px 14px; font-size: 13px; }
+.rail > .proj { overflow: hidden; display: flex; flex-direction: column; }
+.rail > .proj .thumb { height: 128px; flex: none; }
+.rail > .proj h3 { font-size: 18px; }
+.rail > .proj p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rail > .proj .more { margin-top: auto; }
+
+/* Pop up on hover, with a light red border */
+.tile, .rail > .proj, .rail .fig { transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s; }
+.tile:hover, .rail > .proj:hover, .rail .fig:hover { transform: translateY(-6px) scale(1.035); border-color: #ff9a9d; box-shadow: 0 0 0 2px #ff9a9d, 0 20px 44px -14px rgba(255, 75, 80, .6); z-index: 2; }
+.tile img, .rail .fig img, .proj .thumb img { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.tile:hover img, .rail .fig:hover img { transform: scale(1.04); }
+.tile .logo img, .tile:hover .logo img { transform: none; }
+
+/* The Originals: vertical label beside the tiles */
+.split { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; }
+.side-label { position: relative; border-radius: 20px; background: linear-gradient(180deg, #ff4b50, #8e0e16); display: grid; place-items: center; }
+.side-label span { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-display); font-weight: 800; font-size: 26px; letter-spacing: .02em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+@media (max-width: 640px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .side-label { padding: 12px; }
+  .side-label span { writing-mode: horizontal-tb; transform: none; font-size: 22px; }
+  .rail > * { flex-basis: 76vw; }
+}
+@media (prefers-reduced-motion: reduce) { .tile:hover, .rail > .proj:hover, .rail .fig:hover { transform: none; } }
+
 /* ---------- skills ticker ---------- */
 .ticker { position: relative; z-index: 2; padding-block: 28px; overflow: hidden; }
 .ticker .row { overflow: hidden; background: var(--accent); color: var(--accent-ink); padding-block: 16px; transform: rotate(-2deg); margin-inline: -20px; }
@@ -320,12 +410,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap">
     <a class="mark" href="#home">amit<span>/</span>ranjan</a>
     <nav aria-label="Sections">
-      <a href="#about">About</a>
-      <a href="#industry">Industry</a>
-      <a href="#research">Research</a>
-      <a href="#projects">Projects</a>
-      <a href="#experience">Experience</a>
-      <a href="#github">GitHub</a>
+      <a href="#story">My story</a>
+      <a href="#academics">Academics</a>
+      <a href="#skills">Skills</a>
+      <a href="#novelty">Novelty</a>
       <a class="btn small primary" href="mailto:amitran4812@gmail.com">Email me</a>
     </nav>
   </div>
@@ -333,183 +421,205 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 <main id="home">
   <div class="wrap">
-    <div class="hero">
-      <p class="hello" data-build="text">Hi, my name is</p>
-      <h1 class="bigname" data-build="box"><span class="l1">Amit Ranjan</span><span class="l2">Sahu</span></h1>
+    <div class="hero2">
       <div class="cut">
         <div class="disc"></div>
         <img src="assets/amit-cutout.webp" alt="Amit Ranjan Sahu" width="620" height="961">
       </div>
-      <div class="hero-foot">
-        <div class="intro">
-          <p class="role" data-build="text">Product Development Engineer at Sandisk</p>
-          <p class="tagline" data-build="text">Technology and storage, from device physics to products.</p>
-        </div>
-        <div class="cta" data-build="box">
-          <a class="btn primary" href="mailto:amitran4812@gmail.com">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-            Email me
-          </a>
-          <a class="btn" href="https://www.linkedin.com/in/amitranjansa" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4V9.5Z"/></svg>
-            LinkedIn
-          </a>
-          <a class="btn" href="docs/Amit_Ranjan_Sahu_Resume.pdf" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M12 12v6m-3-3 3 3 3-3"/></svg>
-            Resume
-          </a>
-        </div>
+      <div class="hero-text">
+        <p class="hello" data-build="text">Hi, my name is</p>
+        <h1 class="name" data-build="box"><span class="l1">Amit Ranjan</span><span class="l2">Sahu</span></h1>
+        <p class="now" data-build="box"><span class="dot" aria-hidden="true"></span><span>Product Development Engineer at <b>Sandisk</b></span></p>
+        <p class="tagline" data-build="text">NAND device validation and reliability, built on a background in power semiconductor devices and TCAD.</p>
+          <div class="cta" data-build="box">
+            <a class="btn primary" href="mailto:amitran4812@gmail.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              Email me
+            </a>
+            <a class="btn" href="https://www.linkedin.com/in/amitranjansa" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4V9.5Z"/></svg>
+              LinkedIn
+            </a>
+            <a class="btn" href="docs/Amit_Ranjan_Sahu_Resume.pdf" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M12 12v6m-3-3 3 3 3-3"/></svg>
+              Resume
+            </a>
+          </div>
       </div>
     </div>
   </div>
 
   <div class="ticker" aria-label="Skills">
     <div class="row"><div class="track" data-dir="left">
-      <span>NAND verification &amp; reliability</span><span>Sentaurus TCAD</span><span>Cadence Virtuoso</span><span>COMSOL Multiphysics</span><span>LTspice</span><span>Python (NumPy)</span><span>C++</span><span>Verilog</span><span>Web GUI development</span>
+      <span>NAND validation &amp; reliability</span><span>Sentaurus TCAD</span><span>Cadence Virtuoso</span><span>COMSOL Multiphysics</span><span>LTspice</span><span>Python (NumPy)</span><span>C++</span><span>Verilog</span><span>Web GUI development</span>
     </div></div>
     <div class="row alt"><div class="track" data-dir="right">
-      <span>4H-SiC power devices</span><span>Superjunctions</span><span>Edge termination</span><span>Keithley power SMUs</span><span>Electro-thermal characterization</span><span>XRD</span><span>FESEM</span><span>AFM</span><span>Gas sensing</span><span>Analog &amp; digital CMOS</span>
+      <span>4H-SiC power devices</span><span>Superjunctions</span><span>Edge termination</span><span>Keithley power SMUs</span><span>Electro-thermal characterization</span><span>MoS₂ devices</span><span>XRD</span><span>FESEM</span><span>AFM</span><span>Analog &amp; digital CMOS</span>
     </div></div>
   </div>
 
-  <div class="wrap">
-    <div class="facts">
-      <div class="fact"><strong>M.Tech, IIT Bhubaneswar</strong><span>Semiconductor Technology &amp; Chip Design · CGPA 8.15</span></div>
-      <div class="fact"><strong>PCIM India 2026</strong><span>Paper accepted for oral presentation, New Delhi</span></div>
-      <div class="fact"><strong>1.7 kV 4H-SiC</strong><span>Charge-sheet superjunction diode designed in Sentaurus TCAD</span></div>
-      <div class="fact"><strong>Patent in filing</strong><span>Edge termination for CSSJ diodes with better area efficiency</span></div>
-    </div>
-  </div>
-
-  <section id="about">
-    <div class="wrap about-grid">
-      <div>
-        <p class="kicker">About</p>
-        <h2 data-build="box">Semiconductor devices, simulated and measured.</h2>
-      </div>
-      <div>
-        <p>I am a Product Development Engineer at Sandisk. I joined in July 2026 after finishing my M.Tech in Semiconductor Technology and Chip Design at IIT Bhubaneswar.</p>
-        <p>My research was on wide-bandgap power devices. I designed and simulated a 4H-SiC charge-sheet superjunction (CSSJ) diode with a new wide-trench edge termination in Sentaurus TCAD, and presented it at PCIM India 2026. I have also characterized power MOSFETs across temperature in the lab, and I build circuits and layouts in Cadence Virtuoso.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="industry">
+  <!-- ===================== MY FULL STORY ===================== -->
+  <section id="story">
     <div class="wrap">
-      <p class="kicker">Industry projects</p>
-      <h2 data-build="box">At Sandisk</h2>
-      <p class="lead">Industry work is confidential, so only project names are listed.</p>
-      <div class="industry" id="industryList"></div>
-    </div>
-  </section>
-
-  <section id="research" style="padding-top:0">
-    <div class="wrap">
-      <p class="kicker">M.Tech research</p>
-      <h2>A wide-trench termination for 4H-SiC charge-sheet superjunctions.</h2>
-      <p class="lead">Edge terminations stop a power device from breaking down early at its edges. I proposed one for the 4H-SiC CSSJ that reuses the same trench and Al₂O₃/SiO₂ dielectric stack as the active cells, so it needs no extra termination implant.</p>
-
-      <div class="feature" data-build="box">
-        <div class="txt">
-          <span class="badge">Accepted for publication · PCIM India 2026, New Delhi</span>
-          <p class="pubnote">Selected for oral presentation at PCIM India 2026 (Power Conversion and Intelligent Motion), New Delhi. Authors: Amit Ranjan Sahu, Akshay K. A patent on the termination is in the process of filing.</p>
-          <h3>TCAD based study of 4H-SiC charge sheet superjunctions with a wide-trench termination</h3>
-          <p>2D Sentaurus TCAD simulations of a 1700 V-class CSSJ diode using the Hatakeyama impact-ionization model. Without a field plate, the termination stops at about 940 V because the field crowds at the trench corner. A field plate over the trench on a thin dielectric splits that peak between the corner and the plate edge.</p>
-          <p>Supervised by Dr. Akshay K and Dr. Sayan Dey, IIT Bhubaneswar. Supported by the PM Early Career Research Grant (ANRF).</p>
-          <div class="docs">
-            <a class="btn small primary" href="docs/PCIM_India_2026_Paper.pdf" target="_blank" rel="noopener">Read the paper (PDF)</a>
-          </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><p class="kicker">01 · About me</p><h2 data-build="text">My Full Story</h2></div>
+          <div class="rail-nav" data-for="storyRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div>
         </div>
-        <div class="nums">
-          <div class="num"><strong>~95%</strong><span>of the active cell's breakdown voltage reached by the termination</span></div>
-          <div class="num"><strong>1.9 kV</strong><span>active-cell breakdown for a 1700 V-class device</span></div>
-          <div class="num"><strong>18 µm</strong><span>trench width, with a 6.5 µm field plate</span></div>
-          <div class="num"><strong>0.24 V/K</strong><span>rise in breakdown with temperature, showing avalanche breakdown</span></div>
-        </div>
-      </div>
-      <div class="figs">
-        <figure class="fig" data-build="box"><img src="assets/research/potential-distribution.webp" alt="Electrostatic potential at breakdown across the active cells and the wide trench termination" loading="lazy"><figcaption><b>Fig. 8</b> Potential at breakdown for the optimised design (TW = 18 µm, LFP = 6.5 µm).</figcaption></figure>
-        <figure class="fig" data-build="box"><img src="assets/research/cssj-cross-section.webp" alt="Schematic cross-section of the CSSJ diode with the wide trench termination" loading="lazy"><figcaption><b>Fig. 3</b> Proposed CSSJ with the wide trench termination and field plate.</figcaption></figure>
-        <figure class="fig" data-build="box"><img src="assets/research/vbr-vs-trench-width.webp" alt="Breakdown voltage versus trench width for field plate lengths from 4 to 7 micrometres" loading="lazy"><figcaption><b>Fig. 7</b> Breakdown voltage versus trench width for field plates of 4 to 7 µm.</figcaption></figure>
-        <figure class="fig" data-build="box"><img src="assets/research/field-at-trench-corner.webp" alt="Electric field near the trench bottom in the active cell" loading="lazy"><figcaption><b>Fig. 5c</b> Electric field at the trench bottom, peaking near 4 MV/cm.</figcaption></figure>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects">
-    <div class="wrap">
-      <p class="kicker">Projects</p>
-      <h2 data-build="box">Selected work</h2>
-      <p class="lead">Click a project for details and its documents.</p>
-      <div class="projects" id="projectGrid"></div>
-    </div>
-  </section>
-
-  <section id="github" style="padding-top:0">
-    <div class="wrap">
-      <p class="kicker">Open source</p>
-      <h2 data-build="box">On GitHub</h2>
-      <p class="lead">Hardware design and device projects from <a href="https://github.com/amitran4812" target="_blank" rel="noopener">github.com/amitran4812</a>.</p>
-      <div class="projects" id="ghGrid"></div>
-    </div>
-  </section>
-
-  <section id="experience">
-    <div class="wrap">
-      <p class="kicker">Experience</p>
-      <h2 data-build="box">Where I've worked and taught</h2>
-      <div class="timeline">
-        <div class="job" data-build="box">
-          <div class="when">Jul 2026 – now</div>
-          <div>
-            <div class="job-head"><span class="logo wide"><img src="assets/logos/sandisk.svg" alt="Sandisk"></span><div><h3>Product Development Engineer</h3>
-            <p class="org">Sandisk</p></div></div>
-            <ul><li>Work on NAND verification and reliability checks.</li></ul>
-          </div>
-        </div>
-        <div class="job" data-build="box">
-          <div class="when">Jan 2026 – Mar 2026</div>
-          <div>
+        <p class="lede">I am a <b>Product Development Engineer at Sandisk</b>, where I work on <b>NAND device validation and reliability checks</b>. I studied Electronics &amp; Communication Engineering at AKTU, then did my M.Tech in Semiconductor Technology &amp; Chip Design at <b>IIT Bhubaneswar</b>. There I used <b>Sentaurus TCAD</b> to design <b>power semiconductor devices</b>: a 1.7 kV-class 4H-SiC superjunction diode with a new edge termination.</p>
+        <div class="rail" id="storyRail">
+          <article class="tile c-red" data-build="box">
+            <span class="k">Now · since Jul 2026</span>
+            <span class="logo wide"><img src="assets/logos/sandisk.svg" alt="Sandisk"></span>
+            <h3>Product Development Engineer</h3>
+            <p>NAND device validation and reliability checks.</p>
+            <span class="foot">Sandisk</span>
+          </article>
+          <article class="tile c-light" data-build="box" id="industryTile">
+            <span class="k">Industry projects</span>
+            <h3>At Sandisk</h3>
+            <ul class="names" id="industryList"></ul>
+            <span class="foot">Details are confidential</span>
+          </article>
+          <article class="tile c-wine" data-build="box">
+            <span class="k">M.Tech domain · 2024–2026</span>
+            <h3>Power semiconductor devices in TCAD</h3>
+            <p>4H-SiC charge-sheet superjunctions, edge terminations and breakdown, simulated in Sentaurus TCAD.</p>
+            <a class="foot link" href="#novelty">See my novelty →</a>
+          </article>
+          <article class="tile c-dark" data-build="box">
+            <span class="k">Lab work</span>
+            <h3>Measured, not just simulated</h3>
+            <p>Electro-thermal characterization of power MOSFETs with Keithley SMUs, and MoS₂ photodiode and gas-sensor devices.</p>
+            <span class="foot">IIT Bhubaneswar</span>
+          </article>
+          <article class="tile c-rose" data-build="box">
+            <span class="k">Teaching</span>
             <h3>Teaching Assistant, VLSI Design Lab</h3>
-            <p class="org">IIT Bhubaneswar</p>
-            <ul><li>Helped third-year B.Tech students with circuit simulation and layout design in Cadence Virtuoso.</li></ul>
-          </div>
-        </div>
-        <div class="job" data-build="box">
-          <div class="when">Dec 2025</div>
-          <div>
-            <h3>Instructor, Semiconductor and Chip Design Workshop</h3>
-            <p class="org">Edu Fabrica at IIT Bhubaneswar</p>
-            <ul><li>Taught at a hands-on workshop on semiconductor devices and chip design.</li></ul>
-          </div>
+            <p>Jan–Mar 2026. Helped B.Tech students with circuit simulation and layout in Cadence Virtuoso.</p>
+            <span class="foot">Also: instructor, Edu Fabrica chip design workshop, Dec 2025</span>
+          </article>
+          <article class="tile c-ink" data-build="box">
+            <span class="k">Studied</span>
+            <h3>IIT Bhubaneswar <small>·</small> AKTU</h3>
+            <p>M.Tech, Semiconductor Technology &amp; Chip Design (CGPA 8.15). B.Tech, Electronics &amp; Communication (CGPA 7.08).</p>
+            <a class="foot link" href="#academics">My academic journey →</a>
+          </article>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="education" style="padding-top:0">
+  <!-- ===================== ACADEMIC JOURNEY ===================== -->
+  <section id="academics">
     <div class="wrap">
-      <p class="kicker">Degrees</p>
-      <h2 data-build="box">Education</h2>
-      <div class="two">
-        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/iitbbs.webp" alt="IIT Bhubaneswar"></span><div class="ctext"><span class="meta">2024 – 2026 · CGPA 8.15/10</span><h3>M.Tech, Semiconductor Technology &amp; Chip Design</h3><p>Indian Institute of Technology Bhubaneswar. Coursework in analog and digital CMOS VLSI, power semiconductor devices, device fabrication and packaging.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/aktu.webp" alt="AKTU"></span><div class="ctext"><span class="meta">2018 – 2022 · CGPA 7.08/10</span><h3>B.Tech, Electronics &amp; Communication Engineering</h3><p>Dr. A.P.J. Abdul Kalam Technical University.</p></div></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><p class="kicker">02 · Education</p><h2 data-build="text">My Academic Journey So Far</h2></div>
+        </div>
+        <div class="sub-head"><h3>Degrees</h3></div>
+        <div class="rail" id="eduRail">
+          <article class="tile c-red" data-build="box">
+            <span class="logo"><img src="assets/logos/iitbbs.webp" alt="IIT Bhubaneswar"></span>
+            <span class="k">2024 – 2026 · CGPA 8.15/10</span>
+            <h3>M.Tech, Semiconductor Technology &amp; Chip Design</h3>
+            <p>IIT Bhubaneswar. Analog and digital CMOS VLSI, power semiconductor devices, fabrication and packaging.</p>
+          </article>
+          <article class="tile c-light" data-build="box">
+            <span class="logo"><img src="assets/logos/aktu.webp" alt="AKTU"></span>
+            <span class="k">2018 – 2022 · CGPA 7.08/10</span>
+            <h3>B.Tech, Electronics &amp; Communication Engineering</h3>
+            <p>Dr. A.P.J. Abdul Kalam Technical University, Lucknow.</p>
+          </article>
+        </div>
+        <div class="sub-head"><h3>Certifications</h3><div class="rail-nav" data-for="certRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div></div>
+        <div class="rail" id="certRail">
+          <article class="tile c-wine" data-build="box"><span class="logo"><img src="assets/logos/samsung-synopsys.png" alt="Samsung and Synopsys"></span><span class="k">Mar 2025 · Samsung Fellowship</span><h3>ISWDP: India Semiconductor Workforce Development Program</h3><p>Samsung, Synopsys, IISc. Sentaurus TCAD device and process simulation, Levels 1 and 2 plus the advanced track.</p></article>
+          <article class="tile c-dark" data-build="box"><span class="logo mono">GIAN</span><span class="k">Dec 2024</span><h3>Next-Generation Semiconductors: RISC-V, AI and TL-Verilog</h3><p>Global Initiative on Academic Networks.</p></article>
+          <article class="tile c-rose" data-build="box"><span class="logo"><img src="assets/logos/coursera.svg" alt="Coursera"></span><span class="k">Nov 2021</span><h3>Wireless Communication for Everybody</h3><p>Coursera.</p></article>
+          <article class="tile c-light" data-build="box"><span class="logo mono">BRB<br>RAITT</span><span class="k">Jun 2021</span><h3>Online Industrial Training</h3><p>Bharat Ratna Bhim Rao Ambedkar Institute of Telecom Training.</p></article>
+          <article class="tile c-red" data-build="box"><span class="logo"><img src="assets/logos/nptel.png" alt="NPTEL"></span><span class="k">Dec 2020</span><h3>Digital Circuits</h3><p>NPTEL.</p></article>
+          <article class="tile c-ink" data-build="box"><span class="logo"><img src="assets/logos/google.svg" alt="Google"></span><span class="k">May 2020</span><h3>Google Technical Support Fundamentals</h3><p>Coursera.</p></article>
+          <article class="tile c-dark" data-build="box"><span class="logo"><img src="assets/logos/huawei.svg" alt="Huawei"></span><span class="k">Valid until Dec 2023</span><h3>Huawei certification</h3><p>Credential ID 01010200180806261753633.</p></article>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="certification" style="padding-top:0">
+  <!-- ===================== SKILL UNIVERSE ===================== -->
+  <section id="skills">
     <div class="wrap">
-      <p class="kicker">Training</p>
-      <h2 data-build="box">Certification</h2>
-      <div class="two" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
-        <div class="card has-logo" data-build="box" style="grid-column:1 / -1"><span class="logo"><img src="assets/logos/samsung-synopsys.png" alt="Samsung and Synopsys"></span><div class="ctext"><span class="meta">Level-01 issued Mar 2025 · Cohort 4 · Grade I Samsung Fellowship (100% fee waiver)</span><h3>ISWDP, India Semiconductor Workforce Development Program (Samsung, Synopsys, IISc)</h3><p>Device design and physics in Sentaurus TCAD. Completed Level-1, Level-2 and the advanced structure and process simulation track for diodes and MOSFETs.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo mono">GIAN</span><div class="ctext"><span class="meta">Issued Dec 2024</span><h3>Next-Generation Semiconductors: RISC-V, AI and TL-Verilog</h3><p>Global Initiative on Academic Networks (GIAN). Skills: TL-Verilog, RISC-V.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/coursera.svg" alt="Coursera"></span><div class="ctext"><span class="meta">Issued Nov 2021</span><h3>Wireless Communication for Everybody</h3><p>Coursera.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo mono">BRB<br>RAITT</span><div class="ctext"><span class="meta">Issued Jun 2021</span><h3>Online Industrial Training</h3><p>Bharat Ratna Bhim Rao Ambedkar Institute of Telecom Training (BRBRAITT).</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/nptel.png" alt="NPTEL"></span><div class="ctext"><span class="meta">Issued Dec 2020</span><h3>Digital Circuits</h3><p>NPTEL.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/google.svg" alt="Google"></span><div class="ctext"><span class="meta">Issued May 2020</span><h3>Google Technical Support Fundamentals</h3><p>Coursera.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/huawei.svg" alt="Huawei"></span><div class="ctext"><span class="meta">Valid until Dec 2023</span><h3>Huawei certification</h3><p>Huawei. Credential ID 01010200180806261753633.</p></div></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><p class="kicker">03 · Skills &amp; projects</p><h2 data-build="text">My Skill Universe</h2></div>
+        </div>
+        <div class="sub-head"><h3>Skills</h3><div class="rail-nav" data-for="skillRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div></div>
+        <div class="rail" id="skillRail">
+          <article class="tile c-red" data-build="box"><span class="k">Storage</span><h3>NAND</h3><ul class="chips"><li>Device validation</li><li>Reliability checks</li><li>Web GUI tools</li></ul></article>
+          <article class="tile c-light" data-build="box"><span class="k">Simulation</span><h3>Device &amp; process</h3><ul class="chips"><li>Sentaurus TCAD</li><li>COMSOL Multiphysics</li><li>4H-SiC</li><li>Superjunctions</li><li>Edge termination</li></ul></article>
+          <article class="tile c-wine" data-build="box"><span class="k">Circuits</span><h3>Design</h3><ul class="chips"><li>Cadence Virtuoso</li><li>LTspice</li><li>Analog &amp; digital CMOS</li><li>Verilog</li><li>TL-Verilog</li><li>RISC-V</li></ul></article>
+          <article class="tile c-dark" data-build="box"><span class="k">Lab</span><h3>Characterization</h3><ul class="chips"><li>Keithley power SMUs</li><li>Electro-thermal</li><li>XRD</li><li>FESEM</li><li>AFM</li><li>Gas sensing</li></ul></article>
+          <article class="tile c-rose" data-build="box"><span class="k">Code</span><h3>Programming</h3><ul class="chips"><li>Python (NumPy)</li><li>C++</li><li>Tcl</li></ul></article>
+        </div>
+        <div class="sub-head"><h3>Projects</h3><div class="rail-nav" data-for="projectGrid"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div></div>
+        <div class="rail" id="projectGrid"></div>
+        <div class="sub-head"><h3>On GitHub, including my MoS₂ projects</h3><div class="rail-nav" data-for="ghGrid"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div></div>
+        <div class="rail" id="ghGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MY NOVELTY ===================== -->
+  <section id="novelty">
+    <div class="wrap">
+      <div class="panel">
+        <div class="panel-head">
+          <div><p class="kicker">04 · Publication &amp; patent</p><h2 data-build="text">My Novelty</h2></div>
+        </div>
+        <div class="split">
+          <div class="side-label"><span>The Originals</span></div>
+          <div class="split-main">
+            <div class="sub-head"><h3>Publication</h3><div class="rail-nav" data-for="pubRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div></div>
+            <div class="rail" id="pubRail">
+              <a class="tile c-light paper" data-build="box" href="docs/PCIM_India_2026_Paper.pdf" target="_blank" rel="noopener">
+                <img src="assets/research/paper-page1.webp" alt="First page of the PCIM India 2026 paper" loading="lazy">
+                <span class="paper-cap">Open the paper (PDF) ↗</span>
+              </a>
+              <article class="tile c-red" data-build="box">
+                <span class="k">Accepted · oral presentation</span>
+                <h3>PCIM India 2026, New Delhi</h3>
+                <p>TCAD based study of 4H-SiC charge sheet superjunctions with a wide-trench termination.</p>
+                <span class="foot">Amit Ranjan Sahu, Akshay K</span>
+              </article>
+              <article class="tile c-wine" data-build="box">
+                <span class="k">The idea</span>
+                <h3>A termination with no extra implant</h3>
+                <p>It reuses the active cell's trench and Al₂O₃/SiO₂ stack, and a field plate splits the peak field at the trench corner.</p>
+              </article>
+              <article class="tile c-dark stat" data-build="box"><strong>~95%</strong><p>of the active cell's breakdown voltage reached by the termination</p></article>
+              <article class="tile c-rose stat" data-build="box"><strong>1.9 kV</strong><p>active-cell breakdown for a 1700 V-class device</p></article>
+              <article class="tile c-ink stat" data-build="box"><strong>18 µm</strong><p>trench width, with a 6.5 µm field plate</p></article>
+              <article class="tile c-light stat" data-build="box"><strong>0.24 V/K</strong><p>rise in breakdown with temperature, showing avalanche breakdown</p></article>
+              <figure class="fig tile" data-build="box"><img src="assets/research/potential-distribution.webp" alt="Electrostatic potential at breakdown across the active cells and the wide trench termination" loading="lazy"><figcaption><b>Fig. 8</b> Potential at breakdown (TW = 18 µm, LFP = 6.5 µm).</figcaption></figure>
+              <figure class="fig tile" data-build="box"><img src="assets/research/cssj-cross-section.webp" alt="Schematic cross-section of the CSSJ diode with the wide trench termination" loading="lazy"><figcaption><b>Fig. 3</b> Proposed CSSJ with the wide trench termination.</figcaption></figure>
+              <figure class="fig tile" data-build="box"><img src="assets/research/vbr-vs-trench-width.webp" alt="Breakdown voltage versus trench width for field plate lengths from 4 to 7 micrometres" loading="lazy"><figcaption><b>Fig. 7</b> Breakdown voltage versus trench width.</figcaption></figure>
+              <figure class="fig tile" data-build="box"><img src="assets/research/field-at-trench-corner.webp" alt="Electric field near the trench bottom in the active cell" loading="lazy"><figcaption><b>Fig. 5c</b> Field at the trench bottom, near 4 MV/cm.</figcaption></figure>
+            </div>
+            <div class="sub-head"><h3>Patent</h3></div>
+            <div class="rail" id="patentRail">
+              <article class="tile c-red" data-build="box">
+                <span class="k">In the process of filing</span>
+                <h3>Edge termination for charge-sheet superjunction diodes</h3>
+                <p>Better area efficiency than conventional terminations. Based on my M.Tech work at IIT Bhubaneswar.</p>
+              </article>
+              <article class="tile c-dark" data-build="box">
+                <span class="k">Supervised by</span>
+                <h3>Dr. Akshay K and Dr. Sayan Dey</h3>
+                <p>IIT Bhubaneswar. Supported by the PM Early Career Research Grant (ANRF).</p>
+              </article>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -664,11 +774,45 @@ const REPOS = [
 
 (() => {
   const list = document.getElementById('industryList');
-  INDUSTRY.forEach(([name, meta, logo]) => {
-    const d = document.createElement('div'); d.className = 'ind'; d.dataset.build = 'box';
-    d.innerHTML = '<div class="ind-name">' + (logo ? '<span class="logo wide"><img alt="" src="' + logo + '"></span>' : '') + '<h3></h3></div><span class="ind-meta"></span>';
-    d.querySelector('h3').textContent = name; d.querySelector('.ind-meta').textContent = meta;
-    list.appendChild(d);
+  INDUSTRY.forEach(([name]) => {
+    const li = document.createElement('li'); li.textContent = name; list.appendChild(li);
+  });
+})();
+
+// Sideways rails: arrow buttons, and click-and-drag with a mouse.
+(() => {
+  document.querySelectorAll('.rail-nav').forEach(nav => {
+    const rail = document.getElementById(nav.dataset.for);
+    if (!rail) return;
+    const by = d => rail.scrollBy({ left: d * Math.max(260, rail.clientWidth * 0.8), behavior: 'smooth' });
+    nav.querySelector('.prev').addEventListener('click', () => by(-1));
+    nav.querySelector('.next').addEventListener('click', () => by(1));
+    const sync = () => {
+      nav.querySelector('.prev').disabled = rail.scrollLeft < 4;
+      nav.querySelector('.next').disabled = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 4;
+      nav.hidden = rail.scrollWidth <= rail.clientWidth + 4;
+    };
+    rail.addEventListener('scroll', sync, { passive: true }); addEventListener('resize', sync); sync(); setTimeout(sync, 800);
+  });
+  document.querySelectorAll('.rail').forEach(rail => {
+    let x0 = 0, s0 = 0, down = false, moved = false;
+    rail.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; moved = false; x0 = e.clientX; s0 = rail.scrollLeft;
+    });
+    addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - x0;
+      if (!moved && Math.abs(dx) > 6) { moved = true; rail.classList.add('dragging'); }
+      if (moved) rail.scrollLeft = s0 - dx;
+    });
+    addEventListener('pointerup', () => {
+      if (!down) return; down = false;
+      if (moved) { rail.classList.remove('dragging'); const r = rail; setTimeout(() => r.scrollBy({ left: 0 }), 0); }
+    });
+    // A drag shouldn't count as a click on the tile under the mouse.
+    rail.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    rail.addEventListener('dragstart', e => e.preventDefault());
   });
 })();
 
@@ -943,7 +1087,7 @@ const REPOS = [
     scrollTo({ top: 0, behavior: 'instant' });
     for (const el of all) {
       later.unobserve(el);
-      if (el.getBoundingClientRect().top < innerHeight) continue;
+      if (el.getBoundingClientRect().top < innerHeight || offRail(el)) continue;
       if (el.dataset.build === 'text') el.dataset.text ??= el.textContent.trim();
       el.classList.add('built', 'pre'); later.observe(el);
     }
@@ -992,10 +1136,17 @@ const REPOS = [
       setTimeout(() => buildOne(el, a), Math.random() * 200);
     }
   }, { threshold: 0.3 }) : null;
+  // Tiles further along a sideways rail stay as they are; only the ones you can see get built.
+  function offRail(el) {
+    const rail = el.closest('.rail');
+    if (!rail) return false;
+    const r = el.getBoundingClientRect(), rr = rail.getBoundingClientRect();
+    return r.left > rr.right - r.width * 0.5;
+  }
   function armLater() {
     if (reduce || !later) return;
     document.querySelectorAll('[data-build], .proj').forEach(el => {
-      if (el.getBoundingClientRect().top < innerHeight) return;
+      if (el.getBoundingClientRect().top < innerHeight || offRail(el)) return;
       if (el.dataset.build === 'text') el.dataset.text ??= el.textContent.trim();
       el.classList.add('built', 'pre'); later.observe(el);
     });
