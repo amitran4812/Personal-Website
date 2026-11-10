@@ -168,13 +168,17 @@ h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 
 .job-head .org { margin: 2px 0 0; }
 
 /* research figures */
-.figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.figs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
 .fig { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
 .fig.wide { grid-column: 1 / -1; }
-.fig img { width: 100%; height: 220px; object-fit: contain; background: #fff; padding: 12px; transition: transform .4s; }
-.fig.wide img { height: auto; max-height: 360px; }
-.fig:hover img { transform: scale(1.03); }
-.fig figcaption { padding: 14px 18px 18px; font-size: 14px; color: var(--muted); line-height: 1.45; }
+.fig { cursor: zoom-in; border-radius: 14px; }
+.fig img { width: 100%; height: 120px; object-fit: contain; background: #fff; padding: 8px; transition: transform .4s; }
+.fig:hover img { transform: scale(1.04); }
+.fig figcaption { padding: 10px 12px 12px; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+#zoom { border: 0; padding: 0; background: transparent; max-width: min(92vw, 1000px); width: 100%; }
+#zoom::backdrop { background: rgba(0,0,0,.82); }
+#zoom img { width: 100%; max-height: 80vh; object-fit: contain; background: #fff; border-radius: 14px; padding: 14px; display: block; }
+#zoom p { color: #f3f1f1; font-size: 14px; margin: 10px 4px 0; }
 .fig figcaption b { color: var(--accent-hi); font-family: var(--font-mono); font-weight: 500; font-size: 12px; margin-right: 6px; }
 
 /* project thumbnails */
@@ -285,7 +289,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   .nums { border-left: 0; border-top: 1px solid var(--line); }
 }
 @media (max-width: 760px) {
-  .figs { grid-template-columns: minmax(0, 1fr); }
+  .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .top nav a:not(.btn) { display: none; }
   .bigname { inset: 64px 0 auto 0; }
   .hero-foot { margin-top: -60px; flex-direction: column; align-items: start; }
@@ -415,7 +419,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         </div>
       </div>
       <div class="figs">
-        <figure class="fig wide" data-build="box"><img src="assets/research/potential-distribution.webp" alt="Electrostatic potential at breakdown across the active cells and the wide trench termination" loading="lazy"><figcaption><b>Fig. 8</b> Potential at breakdown for the optimised design (TW = 18 µm, LFP = 6.5 µm).</figcaption></figure>
+        <figure class="fig" data-build="box"><img src="assets/research/potential-distribution.webp" alt="Electrostatic potential at breakdown across the active cells and the wide trench termination" loading="lazy"><figcaption><b>Fig. 8</b> Potential at breakdown for the optimised design (TW = 18 µm, LFP = 6.5 µm).</figcaption></figure>
         <figure class="fig" data-build="box"><img src="assets/research/cssj-cross-section.webp" alt="Schematic cross-section of the CSSJ diode with the wide trench termination" loading="lazy"><figcaption><b>Fig. 3</b> Proposed CSSJ with the wide trench termination and field plate.</figcaption></figure>
         <figure class="fig" data-build="box"><img src="assets/research/vbr-vs-trench-width.webp" alt="Breakdown voltage versus trench width for field plate lengths from 4 to 7 micrometres" loading="lazy"><figcaption><b>Fig. 7</b> Breakdown voltage versus trench width for field plates of 4 to 7 µm.</figcaption></figure>
         <figure class="fig" data-build="box"><img src="assets/research/field-at-trench-corner.webp" alt="Electric field near the trench bottom in the active cell" loading="lazy"><figcaption><b>Fig. 5c</b> Electric field at the trench bottom, peaking near 4 MV/cm.</figcaption></figure>
@@ -479,8 +483,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <p class="kicker">Degrees</p>
       <h2 data-build="box">Education</h2>
       <div class="two">
-        <div class="card has-logo" data-build="box"><span class="logo mono">IIT<br>BBS</span><div class="ctext"><span class="meta">2024 – 2026 · CGPA 8.15/10</span><h3>M.Tech, Semiconductor Technology &amp; Chip Design</h3><p>Indian Institute of Technology Bhubaneswar. Coursework in analog and digital CMOS VLSI, power semiconductor devices, device fabrication and packaging.</p></div></div>
-        <div class="card has-logo" data-build="box"><span class="logo mono">AKTU</span><div class="ctext"><span class="meta">2018 – 2022 · CGPA 7.08/10</span><h3>B.Tech, Electronics &amp; Communication Engineering</h3><p>Dr. A.P.J. Abdul Kalam Technical University.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/iitbbs.webp" alt="IIT Bhubaneswar"></span><div class="ctext"><span class="meta">2024 – 2026 · CGPA 8.15/10</span><h3>M.Tech, Semiconductor Technology &amp; Chip Design</h3><p>Indian Institute of Technology Bhubaneswar. Coursework in analog and digital CMOS VLSI, power semiconductor devices, device fabrication and packaging.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/aktu.webp" alt="AKTU"></span><div class="ctext"><span class="meta">2018 – 2022 · CGPA 7.08/10</span><h3>B.Tech, Electronics &amp; Communication Engineering</h3><p>Dr. A.P.J. Abdul Kalam Technical University.</p></div></div>
       </div>
     </div>
   </section>
@@ -520,6 +524,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 </footer>
 
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p></dialog>
 
 <div class="swarm-toggle" role="group" aria-label="Cursor swarm">
   <button type="button" id="replay">Replay</button>
@@ -970,6 +975,16 @@ const REPOS = [
   });
 })();
 
+
+  // Research figures: small thumbnails that open full size on click.
+  const zoom = document.getElementById('zoom');
+  document.querySelectorAll('.fig').forEach(f => {
+    f.tabIndex = 0;
+    const open = () => { const im = f.querySelector('img'); zoom.querySelector('img').src = im.src; zoom.querySelector('img').alt = im.alt; zoom.querySelector('p').textContent = f.querySelector('figcaption').textContent; zoom.showModal(); };
+    f.addEventListener('click', open);
+    f.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
+  });
+  zoom.addEventListener('click', () => zoom.close());
 </script>
 
 </body>
