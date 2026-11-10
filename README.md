@@ -12,10 +12,9 @@ docs/                      resume and PCIM India 2026 slides (thesis and paper h
 Open `index.html` in a browser, or run `python3 -m http.server` in this folder and visit http://localhost:8000.
 
 ## Put it on GitHub Pages
-1. On github.com, create a public repository named `amitran4812.github.io`.
-2. Upload everything in this folder (keep the `assets` and `docs` folders).
-3. In the repository, go to Settings → Pages, set Source to "Deploy from a branch", pick `main` and `/ (root)`, and save.
-4. After a minute the site is live at https://amitran4812.github.io
+1. GitHub Pages is free only for public repositories. If this repository is private, go to Settings → General → Danger Zone → Change visibility and make it public.
+2. Go to Settings → Pages, set Source to "Deploy from a branch", pick `main` and `/ (root)`, and save.
+3. After a minute or two the site is live at https://amitran4812.github.io/Personal-Website/
 
 ## Edit content
 - Projects and their documents: the `PROJECTS` list near the bottom of `index.html`.
