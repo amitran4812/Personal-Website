@@ -1,0 +1,19 @@
+{
+  "name": "amit-ranjan-sahu-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Personal website of Amit Ranjan Sahu with swarm cursors.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "vite": "5.4.11"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
