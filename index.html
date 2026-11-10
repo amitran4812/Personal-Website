@@ -254,9 +254,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 /* ---------- swarm cursors ---------- */
 #swarm.ellipse .agent:not(.named) .tag { opacity: 0; }
 #swarm .agent.busy .tag { opacity: 1; }
-.box.peek { border-style: dashed; }
 #swarm { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
-.agent { position: absolute; left: 0; top: 0; will-change: transform; }
+.agent { position: absolute; left: 0; top: 0; will-change: transform; transform-origin: 3px 2px; }
 .agent svg { display: block; width: 22px; height: 22px; overflow: visible; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.45)); }
 .agent .tag { display: none !important; position: absolute; left: 16px; top: 18px; white-space: nowrap; font: 600 11px/16px var(--font-body); color: #fff; padding: 1px 6px; border-radius: 4px 9px 9px 9px; transition: opacity .3s; }
 .agent.quiet .tag { opacity: 0; }
@@ -729,7 +728,7 @@ const REPOS = [
 
   let W = innerWidth, H = innerHeight;
   addEventListener('resize', () => { W = innerWidth; H = innerHeight; });
-  let target = 24;
+  let target = 32;
   const agents = [];
   const ptr = { x: W * 0.62, y: H * 0.42, last: -1e9 };
 
@@ -740,14 +739,13 @@ const REPOS = [
     el.innerHTML = `<svg class="arrow" viewBox="0 0 24 24"><path d="${ARROW}" fill="${color}" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><svg class="ibeam" viewBox="0 0 24 24"><path d="${IBEAM}" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="${IBEAM}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/></svg><span class="tag" style="background:${color};color:${/^#[CDEF][0-9A-F][CDEF]/.test(color)?'#0a0a0b':'#fff'}">${NAMES[i % NAMES.length]}</span>`;
     layer.appendChild(el);
     const a = Math.random() * Math.PI * 2, r = 80 + Math.random() * 260;
+    const fast = Math.random() < 0.25;
     return {
-      el, x: ptr.x + Math.cos(a) * r, y: ptr.y + Math.sin(a) * r, vx: 0, vy: 0,
-      ring: 50 + Math.random() * 150,          // how close this one likes to sit to you
-      angle: Math.random() * Math.PI * 2,      // where around you it likes to sit
-      maxV: 4 + Math.random() * 4,
-      spin: (Math.random() < .5 ? -1 : 1) * (0.6 + Math.random() * 0.8),
-      wobble: Math.random() * 1000,
-      fan: i % 5 !== 0,                        // most of them come over when you move the mouse
+      el, x: ptr.x + Math.cos(a) * r, y: ptr.y + Math.sin(a) * r, vx: 0, vy: 0, angle: 0,
+      speed: fast ? 1000 + Math.random() * 500 : 300 + Math.random() * 450,   // px/s cruising speed
+      force: fast ? 3500 + Math.random() * 2500 : 700 + Math.random() * 1100, // how hard it can turn
+      spin: fast ? 2.2 + Math.random() * 1.2 : 0.8 + Math.random(),
+      curl: Math.random() * 2 - 1, orbit: 70 + Math.random() * 100,
     };
   }
   function sync() {
@@ -756,139 +754,103 @@ const REPOS = [
   }
   sync();
 
-  function move(x, y) { ptr.x = x; ptr.y = y; ptr.last = performance.now(); }
-  addEventListener('pointermove', e => move(e.clientX, e.clientY), { passive: true });
-  addEventListener('pointerdown', e => {
-    move(e.clientX, e.clientY);
-    if (e.target.closest('button, a')) return;
-    for (const a of agents) {
-      const dx = a.x - ptr.x, dy = a.y - ptr.y, d = Math.hypot(dx, dy) || 1;
-      const f = 18 + Math.random() * 14;
-      a.vx += dx / d * f; a.vy += dy / d * f;
-      a.angle = Math.atan2(dy, dx);
-    }
-  });
+  let mouse = null;
+  addEventListener('pointermove', e => { mouse = { x: e.clientX, y: e.clientY }; }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => { mouse = null; });
 
-  // ---------- Behaviour: every cursor works on its own ----------
-  // Each one wanders, walks up to an element and drags a selection box over it, or tags along with your pointer.
-  // (The stream and scatter moods below are kept but not in the rotation.)
-  let phase = 'work', phaseEnd = performance.now() + 9000, stream = null;
-  const PHASES = ['work'];
-  let phaseIdx = 0;
-  function nextPhase(now) {
-    phaseIdx = 0;
-    phase = PHASES[phaseIdx];
-    phaseEnd = now + ({ work: 8000 + Math.random() * 5000, gather: 5200, stream: 7000, scatter: 1600 })[phase];
-    for (const a of agents) a.goal = null;
-    if (phase === 'scatter') for (const a of agents) {
-      if (a.task || a.pin) continue;
-      const ang = Math.random() * Math.PI * 2, f = 10 + Math.random() * 10;
-      a.vx += Math.cos(ang) * f; a.vy += Math.sin(ang) * f;
-    }
-    if (phase === 'stream') stream = { y: H * (.3 + Math.random() * .4), dir: Math.random() < .5 ? 1 : -1, t0: now, amp: 50 + Math.random() * 70 };
+  // ---------- Behaviour: one crowd that swirls around your pointer ----------
+  // The flocking below is adapted from Swarm Rebuild (MIT License,
+  // Copyright (c) 2026 Dhvanil Patel, Copyright (c) 2026 Joel Bastone Lopez).
+  // Every cursor springs toward a wobbly band around the target, circulates along it, copies the
+  // velocity of its neighbours, speeds up the further it falls behind, and gets shoved aside when
+  // the real pointer runs into it — so the crowd splits around your mouse and closes up again.
+  const tv = { x: 0, y: 0 };      // smoothed pointer velocity, px/s
+  let lastM = null, clock = 0;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  function flockTarget() {
+    if (mouse) return mouse;
+    return { x: W * (0.5 + 0.28 * Math.sin(clock * 0.37)), y: H * (0.5 + 0.25 * Math.sin(clock * 0.53 + 1)) };
   }
-  const leader = t => {
-    const k = (t - stream.t0) / 7000, span = W + 400;
-    const x = stream.dir > 0 ? -200 + k * span : W + 200 - k * span;
-    return [x, stream.y + Math.sin(k * Math.PI * 3) * stream.amp];
-  };
-
-  const peeking = new Set();
-  const PEEK = 'h2, h3, .card, .fig, .proj, .btn, .num, .logo, .doc, .ind, .tagline, .role';
-  function pickElement(a) {
-    const c = [];
-    for (const el of document.querySelectorAll(PEEK)) {
-      if (peeking.has(el) || el.closest('.pre') || performance.now() - (el._peekAt || -1e9) < 9000) continue;
-      const r = el.getBoundingClientRect();
-      if (r.width < 24 || r.height < 16 || r.width > W * .8 || r.height > H * .6 || r.top < 70 || r.bottom > H - 20 || r.left < 0 || r.right > W) continue;
-      c.push([Math.hypot(r.left - a.x, r.top - a.y), el]);
+  function flock(s, list) {
+    const o = flockTarget(), m = mouse;
+    if (m && lastM && s > 0) {
+      const k = Math.min(1, s * 18);
+      tv.x += ((m.x - lastM.x) / s - tv.x) * k;
+      tv.y += ((m.y - lastM.y) / s - tv.y) * k;
+    } else { tv.x *= 0.9; tv.y *= 0.9; }
+    lastM = m ? { x: m.x, y: m.y } : null;
+    const scale = Math.min(1, W / 900) * 0.35 + 0.65;
+    const R = 135 * scale * (1 + 0.18 * Math.sin(clock * 0.55));
+    const swirl = Math.tanh(Math.cos(clock * 0.11) * 3);
+    const want = list.map(c => {
+      const vx = c.x - o.x, vy = c.y - o.y, d = Math.hypot(vx, vy) || 0.01, nx = vx / d, ny = vy / d;
+      const ang = Math.atan2(vy, vx);
+      const rr = R * (1 + 0.3 * Math.sin(3 * ang + clock * 0.7)) + (c.orbit - 120) * 0.55 * scale;
+      const tang = 300 * (0.7 + c.spin * 0.2) * swirl;
+      const rad = clamp((rr - d) * 4, -2600, 1400);
+      const far = clamp((d - rr) / 600, 0, 1);
+      return [-ny * tang + nx * rad - ny * c.curl * 400 * far, nx * tang + ny * rad + nx * c.curl * 400 * far];
+    });
+    list.forEach((c, i) => {
+      let ax = 0, ay = 0, ws = 0;
+      for (const q of list) {
+        if (q === c) continue;
+        const d = Math.hypot(q.x - c.x, q.y - c.y);
+        if (d > 90) continue;
+        const w = 1 - d / 90; ax += q.vx * w; ay += q.vy * w; ws += w;
+      }
+      let [fx, fy] = want[i];
+      if (ws > 0) { fx = fx * 0.7 + (ax / ws) * 0.3; fy = fy * 0.7 + (ay / ws) * 0.3; }
+      const dist = Math.max(0, Math.hypot(c.x - o.x, c.y - o.y) - 180 * scale);
+      const maxV = c.speed * (1.3 + Math.min(3.2, dist / 90));
+      const L = Math.hypot(fx, fy);
+      if (L > maxV) { fx *= maxV / L; fy *= maxV / L; }
+      let gx = (fx - c.vx) * 6, gy = (fy - c.vy) * 6;
+      const maxF = c.force * (1.4 + Math.min(5, dist / 50)), G = Math.hypot(gx, gy);
+      if (G > maxF) { gx *= maxF / G; gy *= maxF / G; }
+      c.vx += gx * s; c.vy += gy * s;
+      c.x += c.vx * s; c.y += c.vy * s;
+    });
+    // The real pointer is solid: cursors it runs into are pushed out of its way, harder the faster it moves.
+    const R0 = 48;
+    if (m) for (const c of list) {
+      const vx = c.x - m.x, vy = c.y - m.y, d = Math.hypot(vx, vy) || 0.01;
+      if (d >= R0) continue;
+      const nx = vx / d, ny = vy / d;
+      c.x = m.x + nx * R0; c.y = m.y + ny * R0;
+      const rel = (c.vx - tv.x) * nx + (c.vy - tv.y) * ny;
+      if (rel < 0) { c.vx -= nx * rel * 1.6; c.vy -= ny * rel * 1.6; }
+      c.vx += nx * 260; c.vy += ny * 260;
     }
-    c.sort((p, q) => p[0] - q[0]);
-    const pool = c.slice(0, 6);
-    return pool.length ? pool[Math.floor(Math.random() * pool.length)][1] : null;
-  }
-  function chooseGoal(a, now) {
-    const active = now - ptr.last < 2500;
-    if (active && a.fan) {
-      // A loose, uneven cloud around the pointer (not a ring): random spot, random distance.
-      const ang = Math.random() * Math.PI * 2, rr = 26 + Math.pow(Math.random(), 1.6) * 150;
-      a.goal = 'ptr'; a.off = [Math.cos(ang) * rr, Math.sin(ang) * rr * .8]; a.until = now + 1800 + Math.random() * 1600; return;
-    }
-    if (!reduce && !layer.hidden && !running && !touring && peeking.size < 6 && Math.random() < .45) {
-      const el = pickElement(a);
-      if (el) { a.goal = null; peek(a, el); return; }
-    }
-    a.goal = [40 + Math.random() * (W - 80), 80 + Math.random() * (H - 140)];
-    a.until = now + 3500 + Math.random() * 3000;
   }
 
   function step(t, dt) {
-    const now = performance.now();
-    if (now > phaseEnd) nextPhase(now);
-    // Idle: the pointer anchor drifts on a slow figure-eight so the oval still moves when you don't.
-    if (now - ptr.last > 3000) {
-      const s = t * 0.0003;
-      ptr.x += ((W * .55 + Math.sin(s) * W * .3) - ptr.x) * 0.02 * dt;
-      ptr.y += ((H * .45 + Math.sin(s * 2) * H * .22) - ptr.y) * 0.02 * dt;
-    }
-    const n = agents.length;
-    agents.forEach((a, idx) => {
-      if (a.pin) { a.vx = a.vy = 0; return; }
+    const s = dt / 60;              // seconds
+    clock += s;
+    const free = [];
+    for (const a of agents) {
+      if (a.pin) { a.vx = a.vy = 0; a.angle *= 1 - Math.min(1, s * 10); continue; }
       if (a.task) {
         const dx = a.task.x - a.x, dy = a.task.y - a.y, d = Math.hypot(dx, dy) || 1;
-        const want = Math.min(a.maxV * 2.4, d * 0.2);
-        a.vx += ((dx / d) * want - a.vx) * 0.25 * dt;
-        a.vy += ((dy / d) * want - a.vy) * 0.25 * dt;
-        a.x += a.vx * dt; a.y += a.vy * dt;
-        return;
+        const want = Math.min(1400, d * 12);
+        const k = Math.min(1, s * 15);
+        a.vx += ((dx / d) * want - a.vx) * k; a.vy += ((dy / d) * want - a.vy) * k;
+        a.x += a.vx * s; a.y += a.vy * s;
+        a.angle *= 1 - Math.min(1, s * 10);
+        continue;
       }
-      let tx, ty, speed = a.maxV, grip = 0.08;
-      if (phase === 'stream') {
-        [tx, ty] = leader(now - idx * 110);
-        tx += Math.sin(idx * 1.7) * 18; ty += Math.cos(idx * 2.3) * 18;
-        speed = a.maxV * 2.2; grip = 0.12;
-      } else if (phase === 'scatter') {
-        tx = a.x + a.vx * 4; ty = a.y + a.vy * 4; grip = 0.01;
-      } else {
-        // As soon as the mouse moves, the followers drop what they were wandering to and come over.
-        if (!a.goal || now > a.until || (a.fan && a.goal !== 'ptr' && now - ptr.last < 120)) chooseGoal(a, now);
-        if (a.task || a.pin) return;
-        if (a.goal === 'ptr') {
-          // Each keeps its own spot in the cloud and its own pace, so the cloud stretches into a trail as you move.
-          tx = ptr.x + a.off[0] + Math.sin(now * 0.0013 + a.wobble) * 10;
-          ty = ptr.y + a.off[1] + Math.cos(now * 0.0011 + a.wobble) * 8;
-          speed = a.maxV * 2.2; grip = 0.06 + (a.maxV - 4) * 0.012;
-        } else {
-          [tx, ty] = a.goal;
-          if (Math.hypot(tx - a.x, ty - a.y) < 14) a.until = Math.min(a.until, now + 400 + Math.random() * 900);
-        }
-      }
-      const dx = tx - a.x, dy = ty - a.y, d = Math.hypot(dx, dy) || 1;
-      const want = Math.min(speed, d * 0.06);
-      let ax = (dx / d * want - a.vx) * grip, ay = (dy / d * want - a.vy) * grip;
-      // Keep a little personal space.
-      let sx = 0, sy = 0;
-      for (const b of agents) {
-        if (b === a) continue;
-        const ex = a.x - b.x, ey = a.y - b.y, e2 = ex * ex + ey * ey;
-        if (e2 < 34 * 34 && e2 > 0.01) { sx += ex / e2; sy += ey / e2; }
-      }
-      ax += sx * 4; ay += sy * 4;
-      // The pointer pushes through the crowd: anyone right under it steps aside.
-      { const px = a.x - ptr.x, py = a.y - ptr.y, p2 = px * px + py * py;
-        if (p2 < 40 * 40 && p2 > 0.01 && now - ptr.last < 1500) { ax += px / p2 * 30; ay += py / p2 * 30; } }
-      // Small hand-held wobble so they feel like people, not particles.
-      ax += Math.sin(t * 0.0021 + a.wobble) * 0.04;
-      ay += Math.cos(t * 0.0017 + a.wobble * 1.7) * 0.04;
-      a.vx = (a.vx + ax * dt) * Math.pow(0.96, dt);
-      a.vy = (a.vy + ay * dt) * Math.pow(0.96, dt);
-      const v = Math.hypot(a.vx, a.vy), cap = a.maxV * 3;
-      if (v > cap) { a.vx *= cap / v; a.vy *= cap / v; }
-      a.x += a.vx * dt; a.y += a.vy * dt;
-    });
+      free.push(a);
+    }
+    flock(s, free);
+    // Cursors tip forward in the direction they are flying.
+    for (const c of free) {
+      if (Math.hypot(c.vx, c.vy) < 30) continue;
+      const d = ((((Math.atan2(c.vy, c.vx) * 180) / Math.PI + 120 - c.angle + 540) % 360) + 360) % 360 - 180;
+      c.angle += d * Math.min(1, s * 8);
+    }
   }
   function draw() {
-    for (const a of agents) a.el.style.transform = `translate(${(a.x - 3).toFixed(1)}px, ${(a.y - 2).toFixed(1)}px)`;
+    for (const a of agents) a.el.style.transform = `translate(${(a.x - 3).toFixed(1)}px, ${(a.y - 2).toFixed(1)}px) rotate(${a.angle.toFixed(1)}deg)`;
   }
 
   let prev = performance.now();
@@ -960,41 +922,9 @@ const REPOS = [
       requestAnimationFrame(() => { el.style.transform = ''; });
     }
     box.style.opacity = 0;
-    a.pin = false; a.task = null; a.vx = 3 - Math.random() * 6; a.vy = -2 - Math.random() * 3;
+    a.pin = false; a.task = null; a.vx = 180 - Math.random() * 360; a.vy = -120 - Math.random() * 180;
     setTimeout(() => { box.remove(); guide.remove(); }, 400);
   }
-  // A cursor walks over to something on screen, drags a selection box over it, looks for a moment, and lets go.
-  async function peek(a, el) {
-    peeking.add(el); el._peekAt = performance.now(); a.el.classList.add('busy');
-    let r = el.getBoundingClientRect();
-    const pad = 4;
-    await arrive(a, r.left - pad, r.top - pad);
-    r = el.getBoundingClientRect();
-    const x = r.left - pad, y = r.top - pad, w = r.width + pad * 2, h = r.height + pad * 2;
-    if (r.bottom < 0 || r.top > H) { done(); return; }
-    a.pin = true;
-    const box = document.createElement('div'); box.className = 'box peek'; box.innerHTML = '<i></i><i></i><i></i><i></i><b></b>';
-    layer.appendChild(box);
-    const label = box.querySelector('b');
-    await tween(380 + Math.min(400, w * 0.3), k => {
-      box.style.transform = `translate(${x}px, ${y}px)`;
-      box.style.width = w * k + 'px'; box.style.height = h * k + 'px';
-      label.textContent = `${Math.round(w * k)} × ${Math.round(h * k)}`;
-      a.x = x + w * k; a.y = y + h * k;
-    });
-    // Linger: a little nudge on the handle, like someone checking the size.
-    const hold = 700 + Math.random() * 900, cx = a.x, cy = a.y;
-    await tween(hold, k => { a.x = cx + Math.sin(k * Math.PI * 2) * 5; a.y = cy + Math.sin(k * Math.PI) * 3; });
-    box.style.opacity = 0;
-    setTimeout(() => box.remove(), 400);
-    done();
-    function done() {
-      peeking.delete(el); a.el.classList.remove('busy');
-      a.pin = false; a.task = null; a.goal = null;
-      a.vx = 2 - Math.random() * 4; a.vy = 2 - Math.random() * 4;
-    }
-  }
-
   // Rebuild: wipe the whole page, then tour down it while the swarm builds every block back.
   let touring = false;
   async function tour() {

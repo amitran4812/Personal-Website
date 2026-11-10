@@ -44,3 +44,7 @@ npm start          # serve dist/ on $PORT (default 8080)
 - Projects and their documents: the `PROJECTS` list near the bottom of `index.html`.
 - GitHub repositories shown: the `REPOS` list just above it.
 - To add a document, drop the PDF into `docs/` and add `['Name', 'docs/file.pdf', 'pages']` to a project's `docs`.
+
+## Credits
+
+The cursor flocking motion is adapted from [Swarm Rebuild](https://github.com/JoelBastoneLopez/swarm-rebuild) (MIT License, Copyright (c) 2026 Dhvanil Patel, Copyright (c) 2026 Joel Bastone Lopez).
