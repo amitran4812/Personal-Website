@@ -159,9 +159,13 @@ h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 
 
 /* industry */
 .industry { display: grid; margin-top: 32px; border-top: 1px solid var(--line); }
-.ind { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 22px; border-bottom: 1px solid var(--line); }
+.ind { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 22px; border-bottom: 1px solid var(--line); }
 .ind h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(22px, 2.8vw, 32px); letter-spacing: -.02em; line-height: 1.15; }
 .ind span { font: 500 13px var(--font-mono); color: var(--accent-hi); }
+.ind .ind-name { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.logo.wide { width: 112px; height: 48px; padding: 10px 12px; }
+.job-head { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+.job-head .org { margin: 2px 0 0; }
 
 /* research figures */
 .figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
@@ -445,8 +449,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <div class="job" data-build="box">
           <div class="when">Jul 2026 – now</div>
           <div>
-            <h3>Product Development Engineer</h3>
-            <p class="org">Sandisk</p>
+            <div class="job-head"><span class="logo wide"><img src="assets/logos/sandisk.svg" alt="Sandisk"></span><div><h3>Product Development Engineer</h3>
+            <p class="org">Sandisk</p></div></div>
             <ul><li>Work on NAND verification and reliability checks.</li></ul>
           </div>
         </div>
@@ -630,9 +634,9 @@ const PROJECTS = [
   }
 ];
 
-// Industry projects: names only (confidential). Add new ones at the top: ['Project name', 'Company · Year'].
+// Industry projects: names only (confidential). Add new ones at the top: ['Project name', 'Company · Year', 'logo path (optional)'].
 const INDUSTRY = [
-  ['Sample Readiness Portal', 'Sandisk · 2026']
+  ['Sample Readiness Portal', 'Sandisk · 2026', 'assets/logos/sandisk.svg']
 ];
 
 const REPOS = [
@@ -646,9 +650,10 @@ const REPOS = [
 
 (() => {
   const list = document.getElementById('industryList');
-  INDUSTRY.forEach(([name, meta]) => {
+  INDUSTRY.forEach(([name, meta, logo]) => {
     const d = document.createElement('div'); d.className = 'ind'; d.dataset.build = 'box';
-    d.innerHTML = '<h3></h3><span></span>'; d.querySelector('h3').textContent = name; d.querySelector('span').textContent = meta;
+    d.innerHTML = '<div class="ind-name">' + (logo ? '<span class="logo wide"><img alt="" src="' + logo + '"></span>' : '') + '<h3></h3></div><span class="ind-meta"></span>';
+    d.querySelector('h3').textContent = name; d.querySelector('.ind-meta').textContent = meta;
     list.appendChild(d);
   });
 })();
