@@ -258,7 +258,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 #swarm { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
 .agent { position: absolute; left: 0; top: 0; will-change: transform; }
 .agent svg { display: block; width: 22px; height: 22px; overflow: visible; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.45)); }
-.agent .tag { position: absolute; left: 16px; top: 18px; white-space: nowrap; font: 600 11px/16px var(--font-body); color: #fff; padding: 1px 6px; border-radius: 4px 9px 9px 9px; transition: opacity .3s; }
+.agent .tag { display: none !important; position: absolute; left: 16px; top: 18px; white-space: nowrap; font: 600 11px/16px var(--font-body); color: #fff; padding: 1px 6px; border-radius: 4px 9px 9px 9px; transition: opacity .3s; }
 .agent.quiet .tag { opacity: 0; }
 .agent .ibeam { display: none; }
 .agent.typing .arrow { display: none; }
@@ -747,7 +747,7 @@ const REPOS = [
       maxV: 4 + Math.random() * 4,
       spin: (Math.random() < .5 ? -1 : 1) * (0.6 + Math.random() * 0.8),
       wobble: Math.random() * 1000,
-      fan: i % 3 === 0,                        // likes to tag along with your pointer
+      fan: i % 5 !== 0,                        // most of them come over when you move the mouse
     };
   }
   function sync() {
@@ -769,16 +769,14 @@ const REPOS = [
     }
   });
 
-  // ---------- Behaviour: the crowd takes turns between a few moods ----------
-  // work:    each cursor does its own thing: wanders, inspects an element with a selection box, or tags along with you
-  // gather:  everyone forms a tilted oval around your pointer
-  // stream:  the crowd snakes across the screen in a line, like a flock
-  // scatter: a quick burst outwards, then back to work
+  // ---------- Behaviour: every cursor works on its own ----------
+  // Each one wanders, walks up to an element and drags a selection box over it, or tags along with your pointer.
+  // (The stream and scatter moods below are kept but not in the rotation.)
   let phase = 'work', phaseEnd = performance.now() + 9000, stream = null;
-  const PHASES = ['work', 'gather', 'work', 'stream', 'work', 'scatter'];
+  const PHASES = ['work'];
   let phaseIdx = 0;
   function nextPhase(now) {
-    phaseIdx = (phaseIdx + 1 + (Math.random() < .3 ? 1 : 0)) % PHASES.length;
+    phaseIdx = 0;
     phase = PHASES[phaseIdx];
     phaseEnd = now + ({ work: 8000 + Math.random() * 5000, gather: 5200, stream: 7000, scatter: 1600 })[phase];
     for (const a of agents) a.goal = null;
@@ -811,8 +809,12 @@ const REPOS = [
   }
   function chooseGoal(a, now) {
     const active = now - ptr.last < 2500;
-    if (active && a.fan) { a.goal = 'ptr'; a.off = [(Math.random() - .5) * 160, (Math.random() - .5) * 120]; a.until = now + 2500 + Math.random() * 2000; return; }
-    if (!reduce && !layer.hidden && !running && !touring && peeking.size < 4 && Math.random() < .3) {
+    if (active && a.fan) {
+      // A loose, uneven cloud around the pointer (not a ring): random spot, random distance.
+      const ang = Math.random() * Math.PI * 2, rr = 26 + Math.pow(Math.random(), 1.6) * 150;
+      a.goal = 'ptr'; a.off = [Math.cos(ang) * rr, Math.sin(ang) * rr * .8]; a.until = now + 1800 + Math.random() * 1600; return;
+    }
+    if (!reduce && !layer.hidden && !running && !touring && peeking.size < 6 && Math.random() < .45) {
       const el = pickElement(a);
       if (el) { a.goal = null; peek(a, el); return; }
     }
@@ -823,7 +825,6 @@ const REPOS = [
   function step(t, dt) {
     const now = performance.now();
     if (now > phaseEnd) nextPhase(now);
-    layer.classList.toggle('ellipse', phase === 'gather');
     // Idle: the pointer anchor drifts on a slow figure-eight so the oval still moves when you don't.
     if (now - ptr.last > 3000) {
       const s = t * 0.0003;
@@ -841,16 +842,6 @@ const REPOS = [
         a.x += a.vx * dt; a.y += a.vy * dt;
         return;
       }
-      if (phase === 'gather') {
-        const base = (idx / n) * Math.PI * 2, th = base + t * 0.00042;
-        const rx = Math.min(190, W * 0.36) * (1 + 0.05 * Math.sin(t * 0.0011) + 0.04 * Math.sin(base * 3 + t * 0.002));
-        const ry = rx * 0.55, tilt = -0.32;
-        const ex = Math.cos(th) * rx, ey = Math.sin(th) * ry;
-        const tx = ptr.x + ex * Math.cos(tilt) - ey * Math.sin(tilt), ty = ptr.y + ex * Math.sin(tilt) + ey * Math.cos(tilt);
-        const k = 1 - Math.pow(1 - 0.07, dt);
-        a.vx = (tx - a.x) * k; a.vy = (ty - a.y) * k; a.x += a.vx; a.y += a.vy;
-        return;
-      }
       let tx, ty, speed = a.maxV, grip = 0.08;
       if (phase === 'stream') {
         [tx, ty] = leader(now - idx * 110);
@@ -859,13 +850,14 @@ const REPOS = [
       } else if (phase === 'scatter') {
         tx = a.x + a.vx * 4; ty = a.y + a.vy * 4; grip = 0.01;
       } else {
-        if (!a.goal || now > a.until) chooseGoal(a, now);
+        // As soon as the mouse moves, the followers drop what they were wandering to and come over.
+        if (!a.goal || now > a.until || (a.fan && a.goal !== 'ptr' && now - ptr.last < 120)) chooseGoal(a, now);
         if (a.task || a.pin) return;
         if (a.goal === 'ptr') {
-          const s = now * 0.0006 * a.spin;
-          tx = ptr.x + a.off[0] * Math.cos(s) - a.off[1] * Math.sin(s);
-          ty = ptr.y + a.off[0] * Math.sin(s) + a.off[1] * Math.cos(s);
-          speed = a.maxV * 1.6;
+          // Each keeps its own spot in the cloud and its own pace, so the cloud stretches into a trail as you move.
+          tx = ptr.x + a.off[0] + Math.sin(now * 0.0013 + a.wobble) * 10;
+          ty = ptr.y + a.off[1] + Math.cos(now * 0.0011 + a.wobble) * 8;
+          speed = a.maxV * 2.2; grip = 0.06 + (a.maxV - 4) * 0.012;
         } else {
           [tx, ty] = a.goal;
           if (Math.hypot(tx - a.x, ty - a.y) < 14) a.until = Math.min(a.until, now + 400 + Math.random() * 900);
@@ -882,6 +874,9 @@ const REPOS = [
         if (e2 < 34 * 34 && e2 > 0.01) { sx += ex / e2; sy += ey / e2; }
       }
       ax += sx * 4; ay += sy * 4;
+      // The pointer pushes through the crowd: anyone right under it steps aside.
+      { const px = a.x - ptr.x, py = a.y - ptr.y, p2 = px * px + py * py;
+        if (p2 < 40 * 40 && p2 > 0.01 && now - ptr.last < 1500) { ax += px / p2 * 30; ay += py / p2 * 30; } }
       // Small hand-held wobble so they feel like people, not particles.
       ax += Math.sin(t * 0.0021 + a.wobble) * 0.04;
       ay += Math.cos(t * 0.0017 + a.wobble * 1.7) * 0.04;
