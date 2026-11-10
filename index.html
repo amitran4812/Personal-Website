@@ -157,6 +157,12 @@ h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 
 .num span { font-size: 14px; color: var(--muted); line-height: 1.4; }
 .docs { display: flex; flex-wrap: wrap; gap: 10px; }
 
+/* industry */
+.industry { display: grid; margin-top: 32px; border-top: 1px solid var(--line); }
+.ind { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 22px; border-bottom: 1px solid var(--line); }
+.ind h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(22px, 2.8vw, 32px); letter-spacing: -.02em; line-height: 1.15; }
+.ind span { font: 500 13px var(--font-mono); color: var(--accent-hi); }
+
 /* projects */
 .projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 40px; }
 .proj {
@@ -269,6 +275,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <a class="mark" href="#home">amit<span>/</span>ranjan</a>
     <nav aria-label="Sections">
       <a href="#about">About</a>
+      <a href="#industry">Industry</a>
       <a href="#research">Research</a>
       <a href="#projects">Projects</a>
       <a href="#experience">Experience</a>
@@ -337,12 +344,20 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div>
         <p>I am a Product Development Engineer at Sandisk. I joined in July 2026 after finishing my M.Tech in Semiconductor Technology and Chip Design at IIT Bhubaneswar.</p>
         <p>My research was on wide-bandgap power devices. I designed and simulated a 4H-SiC charge-sheet superjunction (CSSJ) diode with a new wide-trench edge termination in Sentaurus TCAD, and presented it at PCIM India 2026. I have also characterized power MOSFETs across temperature in the lab, and I build circuits and layouts in Cadence Virtuoso.</p>
-        <p>At Sandisk I built a web-based portal that checks sample readiness for RPG products.</p>
       </div>
     </div>
   </section>
 
-  <section id="research">
+  <section id="industry">
+    <div class="wrap">
+      <p class="kicker">Industry projects</p>
+      <h2 data-build="box">At Sandisk</h2>
+      <p class="lead">Industry work is confidential, so only project names are listed.</p>
+      <div class="industry" id="industryList"></div>
+    </div>
+  </section>
+
+  <section id="research" style="padding-top:0">
     <div class="wrap">
       <p class="kicker">M.Tech research</p>
       <h2>A wide-trench termination for 4H-SiC charge-sheet superjunctions.</h2>
@@ -398,7 +413,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <div>
             <h3>Product Development Engineer</h3>
             <p class="org">Sandisk</p>
-            <ul><li>Work on NAND verification and reliability checks.</li><li>Designed and built a web-based GUI portal that performs sample readiness checks for RPG products.</li></ul>
+            <ul><li>Work on NAND verification and reliability checks.</li></ul>
           </div>
         </div>
         <div class="job" data-build="box">
@@ -491,16 +506,6 @@ const PROJECTS = [
     ]
   },
   {
-    title: 'Sample readiness portal for RPG products',
-    when: '2026 – now', where: 'Sandisk', tags: 'Web GUI · Automation',
-    blurb: 'A web-based GUI portal that checks whether samples are ready for RPG products.',
-    points: [
-      'Designed and built a web-based GUI portal that performs sample readiness checks for RPG products.',
-      'Brings the readiness status into one place for the product development team.'
-    ],
-    docs: []
-  },
-  {
     title: 'Steady-state electro-thermal characterization of a power MOSFET',
     when: 'Jan 2026 – Apr 2026', where: 'iVP Semiconductor', tags: 'Keithley SMUs · Python',
     blurb: 'Measured static MOSFET parameters across temperature and wrote Python for gate-charge extraction.',
@@ -537,6 +542,11 @@ const PROJECTS = [
   }
 ];
 
+// Industry projects: names only (confidential). Add new ones at the top: ['Project name', 'Company · Year'].
+const INDUSTRY = [
+  ['Sample Readiness Portal', 'Sandisk · 2026']
+];
+
 const REPOS = [
   ['RISCV1st', 'TL-Verilog · Makerchip', 'A RISC-V CPU design written in TL-Verilog.'],
   ['MoS2-Photodiode', 'Device research', 'Work on a MoS₂-based photodiode.'],
@@ -545,6 +555,15 @@ const REPOS = [
   ['dflipflop', 'Tcl · Digital design', 'A D flip-flop design and its implementation flow.'],
   ['makerchip3', 'TL-Verilog · Makerchip', 'TL-Verilog design exercises in Makerchip.']
 ];
+
+(() => {
+  const list = document.getElementById('industryList');
+  INDUSTRY.forEach(([name, meta]) => {
+    const d = document.createElement('div'); d.className = 'ind'; d.dataset.build = 'box';
+    d.innerHTML = '<h3></h3><span></span>'; d.querySelector('h3').textContent = name; d.querySelector('span').textContent = meta;
+    list.appendChild(d);
+  });
+})();
 
 (() => {
   const gh = document.getElementById('ghGrid');
