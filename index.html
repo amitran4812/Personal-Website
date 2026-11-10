@@ -163,6 +163,27 @@ h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 
 .ind h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(22px, 2.8vw, 32px); letter-spacing: -.02em; line-height: 1.15; }
 .ind span { font: 500 13px var(--font-mono); color: var(--accent-hi); }
 
+/* research figures */
+.figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.fig { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.fig.wide { grid-column: 1 / -1; }
+.fig img { width: 100%; height: 220px; object-fit: contain; background: #fff; padding: 12px; transition: transform .4s; }
+.fig.wide img { height: auto; max-height: 360px; }
+.fig:hover img { transform: scale(1.03); }
+.fig figcaption { padding: 14px 18px 18px; font-size: 14px; color: var(--muted); line-height: 1.45; }
+.fig figcaption b { color: var(--accent-hi); font-family: var(--font-mono); font-weight: 500; font-size: 12px; margin-right: 6px; }
+
+/* project thumbnails */
+.thumb { margin: -24px -24px 6px; height: 170px; overflow: hidden; border-radius: 20px 20px 0 0; background: var(--raise); border-bottom: 1px solid var(--line); position: relative; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s; }
+.thumb img.fit { object-fit: contain; background: #fff; padding: 10px; }
+.thumb svg { width: 100%; height: 100%; display: block; }
+.proj:hover .thumb img, .proj:hover .thumb svg { transform: scale(1.05); }
+.thumb svg { transition: transform .45s; }
+.dlg-img { width: 100%; max-height: 300px; object-fit: contain; background: #fff; border-radius: 14px; padding: 10px; }
+.dlg-art { border-radius: 14px; overflow: hidden; height: 200px; border: 1px solid var(--line); }
+.dlg-art svg { width: 100%; height: 100%; display: block; }
+
 /* projects */
 .projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 40px; }
 .proj {
@@ -207,6 +228,11 @@ dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(4px); }
 .card h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 1.25; }
 .card .meta { font: 500 12px/1.4 var(--font-mono); color: var(--accent-hi); }
 .card p { margin: 0; color: var(--muted); font-size: 15px; }
+.card.has-logo { grid-template-columns: 56px minmax(0, 1fr); gap: 18px; align-items: start; }
+.ctext { display: grid; gap: 8px; min-width: 0; }
+.logo { width: 56px; height: 56px; border-radius: 14px; background: #fff; display: grid; place-items: center; padding: 9px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+.logo img { width: 100%; height: 100%; object-fit: contain; }
+.logo.mono { background: linear-gradient(145deg, var(--accent-hi), #8e0e16); color: #fff; font: 800 12px/1.05 var(--font-display); letter-spacing: .02em; text-align: center; padding: 4px; }
 
 /* contact */
 .contact { text-align: left; }
@@ -248,12 +274,14 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 /* ---------- responsive ---------- */
 @media (max-width: 960px) {
+  .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .skills { grid-template-columns: minmax(0, 1fr); }
   .feature { grid-template-columns: minmax(0, 1fr); }
   .nums { border-left: 0; border-top: 1px solid var(--line); }
 }
 @media (max-width: 760px) {
+  .figs { grid-template-columns: minmax(0, 1fr); }
   .top nav a:not(.btn) { display: none; }
   .bigname { inset: 64px 0 auto 0; }
   .hero-foot { margin-top: -60px; flex-direction: column; align-items: start; }
@@ -382,6 +410,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <div class="num"><strong>0.24 V/K</strong><span>rise in breakdown with temperature, showing avalanche breakdown</span></div>
         </div>
       </div>
+      <div class="figs">
+        <figure class="fig wide" data-build="box"><img src="assets/research/potential-distribution.webp" alt="Electrostatic potential at breakdown across the active cells and the wide trench termination" loading="lazy"><figcaption><b>Fig. 8</b> Potential at breakdown for the optimised design (TW = 18 µm, LFP = 6.5 µm).</figcaption></figure>
+        <figure class="fig" data-build="box"><img src="assets/research/cssj-cross-section.webp" alt="Schematic cross-section of the CSSJ diode with the wide trench termination" loading="lazy"><figcaption><b>Fig. 3</b> Proposed CSSJ with the wide trench termination and field plate.</figcaption></figure>
+        <figure class="fig" data-build="box"><img src="assets/research/vbr-vs-trench-width.webp" alt="Breakdown voltage versus trench width for field plate lengths from 4 to 7 micrometres" loading="lazy"><figcaption><b>Fig. 7</b> Breakdown voltage versus trench width for field plates of 4 to 7 µm.</figcaption></figure>
+        <figure class="fig" data-build="box"><img src="assets/research/field-at-trench-corner.webp" alt="Electric field near the trench bottom in the active cell" loading="lazy"><figcaption><b>Fig. 5c</b> Electric field at the trench bottom, peaking near 4 MV/cm.</figcaption></figure>
+      </div>
     </div>
   </section>
 
@@ -441,8 +475,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <p class="kicker">Degrees</p>
       <h2 data-build="box">Education</h2>
       <div class="two">
-        <div class="card" data-build="box"><span class="meta">2024 – 2026 · CGPA 8.15/10</span><h3>M.Tech, Semiconductor Technology &amp; Chip Design</h3><p>Indian Institute of Technology Bhubaneswar. Coursework in analog and digital CMOS VLSI, power semiconductor devices, device fabrication and packaging.</p></div>
-        <div class="card" data-build="box"><span class="meta">2018 – 2022 · CGPA 7.08/10</span><h3>B.Tech, Electronics &amp; Communication Engineering</h3><p>Dr. A.P.J. Abdul Kalam Technical University.</p></div>
+        <div class="card has-logo" data-build="box"><span class="logo mono">IIT<br>BBS</span><div class="ctext"><span class="meta">2024 – 2026 · CGPA 8.15/10</span><h3>M.Tech, Semiconductor Technology &amp; Chip Design</h3><p>Indian Institute of Technology Bhubaneswar. Coursework in analog and digital CMOS VLSI, power semiconductor devices, device fabrication and packaging.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo mono">AKTU</span><div class="ctext"><span class="meta">2018 – 2022 · CGPA 7.08/10</span><h3>B.Tech, Electronics &amp; Communication Engineering</h3><p>Dr. A.P.J. Abdul Kalam Technical University.</p></div></div>
       </div>
     </div>
   </section>
@@ -452,13 +486,13 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <p class="kicker">Training</p>
       <h2 data-build="box">Certification</h2>
       <div class="two" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
-        <div class="card" data-build="box" style="grid-column:1 / -1"><span class="meta">Level-01 issued Mar 2025 · Cohort 4 · Grade I Samsung Fellowship (100% fee waiver)</span><h3>ISWDP, India Semiconductor Workforce Development Program (Samsung, Synopsys, IISc)</h3><p>Device design and physics in Sentaurus TCAD. Completed Level-1, Level-2 and the advanced structure and process simulation track for diodes and MOSFETs.</p></div>
-        <div class="card" data-build="box"><span class="meta">Issued Dec 2024</span><h3>Next-Generation Semiconductors: RISC-V, AI and TL-Verilog</h3><p>Global Initiative on Academic Networks (GIAN). Skills: TL-Verilog, RISC-V.</p></div>
-        <div class="card" data-build="box"><span class="meta">Issued Nov 2021</span><h3>Wireless Communication for Everybody</h3><p>Coursera.</p></div>
-        <div class="card" data-build="box"><span class="meta">Issued Jun 2021</span><h3>Online Industrial Training</h3><p>Bharat Ratna Bhim Rao Ambedkar Institute of Telecom Training (BRBRAITT).</p></div>
-        <div class="card" data-build="box"><span class="meta">Issued Dec 2020</span><h3>Digital Circuits</h3><p>NPTEL.</p></div>
-        <div class="card" data-build="box"><span class="meta">Issued May 2020</span><h3>Google Technical Support Fundamentals</h3><p>Coursera.</p></div>
-        <div class="card" data-build="box"><span class="meta">Valid until Dec 2023</span><h3>Huawei certification</h3><p>Huawei. Credential ID 01010200180806261753633.</p></div>
+        <div class="card has-logo" data-build="box" style="grid-column:1 / -1"><span class="logo"><img src="assets/logos/samsung-synopsys.png" alt="Samsung and Synopsys"></span><div class="ctext"><span class="meta">Level-01 issued Mar 2025 · Cohort 4 · Grade I Samsung Fellowship (100% fee waiver)</span><h3>ISWDP, India Semiconductor Workforce Development Program (Samsung, Synopsys, IISc)</h3><p>Device design and physics in Sentaurus TCAD. Completed Level-1, Level-2 and the advanced structure and process simulation track for diodes and MOSFETs.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo mono">GIAN</span><div class="ctext"><span class="meta">Issued Dec 2024</span><h3>Next-Generation Semiconductors: RISC-V, AI and TL-Verilog</h3><p>Global Initiative on Academic Networks (GIAN). Skills: TL-Verilog, RISC-V.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/coursera.svg" alt="Coursera"></span><div class="ctext"><span class="meta">Issued Nov 2021</span><h3>Wireless Communication for Everybody</h3><p>Coursera.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo mono">BRB<br>RAITT</span><div class="ctext"><span class="meta">Issued Jun 2021</span><h3>Online Industrial Training</h3><p>Bharat Ratna Bhim Rao Ambedkar Institute of Telecom Training (BRBRAITT).</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/nptel.png" alt="NPTEL"></span><div class="ctext"><span class="meta">Issued Dec 2020</span><h3>Digital Circuits</h3><p>NPTEL.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/google.svg" alt="Google"></span><div class="ctext"><span class="meta">Issued May 2020</span><h3>Google Technical Support Fundamentals</h3><p>Coursera.</p></div></div>
+        <div class="card has-logo" data-build="box"><span class="logo"><img src="assets/logos/huawei.svg" alt="Huawei"></span><div class="ctext"><span class="meta">Valid until Dec 2023</span><h3>Huawei certification</h3><p>Huawei. Credential ID 01010200180806261753633.</p></div></div>
       </div>
     </div>
   </section>
@@ -489,9 +523,64 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 </div>
 
 <script>
+// Small drawn illustrations for project cards that have no photo.
+const ART = {
+  iv: `<svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="400" height="170" fill="#141416"/>
+    <g stroke="#2a2628" stroke-width="1">${Array.from({ length: 9 }, (_, i) => `<line x1="${40 + i * 42}" y1="14" x2="${40 + i * 42}" y2="150"/>`).join('')}${Array.from({ length: 5 }, (_, i) => `<line x1="40" y1="${150 - i * 34}" x2="376" y2="${150 - i * 34}"/>`).join('')}</g>
+    <g fill="none" stroke-width="2.5" stroke-linecap="round">
+      ${[[30, '#ff4b50'], [58, '#e3262d'], [86, '#c81e28'], [112, '#a3151d'], [134, '#f3f1f1']].map(([h, c]) => `<path stroke="${c}" d="M40 150 C 70 ${150 - h * 1.1}, 100 ${150 - h}, 150 ${150 - h} S 330 ${150 - h - 6}, 376 ${150 - h - 8}"/>`).join('')}
+    </g>
+    <text x="48" y="30" fill="#a09a9c" font-family="JetBrains Mono, monospace" font-size="11">I_D vs V_DS · 25–150 °C</text>
+  </svg>`,
+  fsm: `<svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="400" height="170" fill="#141416"/>
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#a09a9c"/></marker></defs>
+    <g fill="none" stroke="#a09a9c" stroke-width="1.6" marker-end="url(#ah)">
+      <path d="M92 70 Q 145 40 188 70"/><path d="M228 70 Q 275 40 318 70"/><path d="M318 104 Q 270 140 228 104"/><path d="M188 104 Q 140 140 92 104"/>
+    </g>
+    <g font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="14" text-anchor="middle">
+      <circle cx="70" cy="87" r="26" fill="#e3262d"/><text x="70" y="92" fill="#fff">IDLE</text>
+      <circle cx="208" cy="87" r="26" fill="#f3f1f1"/><text x="208" y="92" fill="#0a0a0b">S1</text>
+      <circle cx="340" cy="87" r="26" fill="#f3f1f1"/><text x="340" y="92" fill="#0a0a0b">S2</text>
+    </g>
+    <g font-family="JetBrains Mono, monospace" font-size="10" fill="#a09a9c" text-anchor="middle"><text x="140" y="40">A=1</text><text x="272" y="40">B=1</text><text x="272" y="146">count++</text><text x="140" y="146">reset</text></g>
+  </svg>`,
+  cmos: `<svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="400" height="170" fill="#141416"/>
+    <g fill="none" stroke="#f3f1f1" stroke-width="2" stroke-linecap="round">
+      <line x1="200" y1="14" x2="200" y2="44"/><line x1="170" y1="14" x2="230" y2="14"/>
+      <line x1="200" y1="126" x2="200" y2="156"/><line x1="170" y1="156" x2="230" y2="156"/><line x1="180" y1="162" x2="220" y2="162"/>
+      <line x1="200" y1="76" x2="200" y2="94"/><line x1="200" y1="85" x2="300" y2="85"/>
+      <line x1="120" y1="85" x2="170" y2="85"/><line x1="170" y1="56" x2="170" y2="114"/>
+    </g>
+    <g fill="none" stroke="#e3262d" stroke-width="3"><path d="M182 44 v32 M182 94 v32 M182 48 h18 M182 72 h18 M182 98 h18 M182 122 h18"/><circle cx="176" cy="60" r="4"/></g>
+    <g font-family="JetBrains Mono, monospace" font-size="11" fill="#a09a9c"><text x="236" y="18">VDD</text><text x="100" y="80">IN</text><text x="306" y="80">OUT</text></g>
+    <g stroke="#2a2628">${Array.from({ length: 6 }, (_, i) => `<rect x="${18 + i * 12}" y="${30 + (i % 2) * 30}" width="8" height="90" fill="${i % 2 ? '#e3262d33' : '#f3f1f11a'}"/>`).join('')}${Array.from({ length: 6 }, (_, i) => `<rect x="${330 + (i % 3) * 18}" y="${26 + Math.floor(i / 3) * 64}" width="12" height="54" fill="${i % 2 ? '#e3262d33' : '#f3f1f11a'}"/>`).join('')}</g>
+  </svg>`,
+  mesh: `<svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff4b50"/><stop offset=".45" stop-color="#e3262d"/><stop offset=".75" stop-color="#5a0a0f"/><stop offset="1" stop-color="#141416"/></linearGradient></defs>
+    <rect width="400" height="170" fill="url(#mg)"/>
+    <g stroke="rgba(255,255,255,.28)" stroke-width=".8">${Array.from({ length: 26 }, (_, i) => `<line x1="${i * i * 0.6}" y1="0" x2="${i * i * 0.6}" y2="170"/>`).join('')}${Array.from({ length: 16 }, (_, i) => `<line x1="0" y1="${i * 11}" x2="400" y2="${i * 11}"/>`).join('')}</g>
+    <rect x="0" y="0" width="400" height="16" fill="#f3f1f1" opacity=".85"/>
+    <text x="250" y="150" fill="#fff" font-family="JetBrains Mono, monospace" font-size="11">Sentaurus · diode / MOSFET</text>
+  </svg>`,
+  code: `<svg viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="400" height="170" fill="#141416"/>
+    <g font-family="JetBrains Mono, monospace" font-size="12">
+      <text x="24" y="40" fill="#ff4b50">module</text><text x="80" y="40" fill="#f3f1f1">core(clk, rst);</text>
+      <text x="40" y="64" fill="#a09a9c">|cpu</text><text x="80" y="64" fill="#f3f1f1">@1 $pc[31:0] = ...</text>
+      <text x="40" y="88" fill="#a09a9c">always</text><text x="96" y="88" fill="#f3f1f1">@(posedge clk)</text>
+      <text x="24" y="112" fill="#ff4b50">endmodule</text>
+    </g>
+    <g fill="#e3262d" opacity=".9">${Array.from({ length: 14 }, (_, i) => `<rect x="${300 + (i % 4) * 20}" y="${30 + Math.floor(i / 4) * 30}" width="14" height="${8 + (i * 7) % 14}" rx="2"/>`).join('')}</g>
+  </svg>`
+};
+
 const PROJECTS = [
   {
     title: 'TCAD study of 4H-SiC CSSJ with wide-trench edge termination',
+    img: 'assets/research/potential-distribution.webp', gallery: ['assets/research/cssj-cross-section.webp', 'assets/research/vbr-vs-trench-width.webp'],
     when: 'Sep 2025 – Apr 2026', where: 'M.Tech thesis · IIT Bhubaneswar', tags: 'Sentaurus TCAD · 4H-SiC',
     blurb: '2D design of a 1.7 kV-class charge-sheet superjunction diode and a new trench termination.',
     points: [
@@ -505,7 +594,7 @@ const PROJECTS = [
     ]
   },
   {
-    title: 'Steady-state electro-thermal characterization of a power MOSFET',
+    title: 'Steady-state electro-thermal characterization of a power MOSFET', art: 'iv',
     when: 'Jan 2026 – Apr 2026', where: 'iVP Semiconductor', tags: 'Keithley SMUs · Python',
     blurb: 'Measured static MOSFET parameters across temperature and wrote Python for gate-charge extraction.',
     points: [
@@ -516,7 +605,7 @@ const PROJECTS = [
     docs: []
   },
   {
-    title: 'Parking lot occupancy counter',
+    title: 'Parking lot occupancy counter', art: 'fsm',
     when: 'Jan 2025 – Apr 2025', where: 'M.Tech term project', tags: 'Verilog · FSM',
     blurb: 'A finite-state machine in Verilog that counts cars from two photo-sensor inputs.',
     points: [
@@ -526,14 +615,14 @@ const PROJECTS = [
     docs: []
   },
   {
-    title: 'Analog and digital circuit design',
+    title: 'Analog and digital circuit design', art: 'cmos',
     when: 'Jul 2024 – Jan 2025', where: 'M.Tech term project', tags: 'Cadence Virtuoso',
     blurb: 'Schematic and layout design of several analog and digital CMOS circuits.',
     points: ['Circuit and layout design of multiple analog and digital circuits in Cadence Virtuoso.'],
     docs: []
   },
   {
-    title: 'Sentaurus TCAD process and device simulation',
+    title: 'Sentaurus TCAD process and device simulation', art: 'mesh',
     when: 'Apr 2025 – Jun 2025', where: 'ISWDP · IISc, Synopsys, Samsung', tags: 'Sentaurus TCAD',
     blurb: 'Structure and process simulation of diodes and MOSFETs for real-world applications.',
     points: ['Completed Level-1, Level-2 and the advanced track of structure and process simulation of semiconductor devices (diode, MOSFET) in Sentaurus TCAD, with a Grade-I scholarship.'],
@@ -569,7 +658,7 @@ const REPOS = [
   REPOS.forEach(([name, tag, blurb]) => {
     const a = document.createElement('a');
     a.className = 'proj'; a.href = 'https://github.com/amitran4812/' + name; a.target = '_blank'; a.rel = 'noopener';
-    a.innerHTML = `<div class="meta"><span>${tag}</span><span>GitHub ↗</span></div><h3>${name}</h3><p>${blurb}</p><span class="more">Open repository →</span>`;
+    a.innerHTML = `<div class="thumb"><img src="https://opengraph.githubassets.com/1/amitran4812/${name}" alt="" loading="lazy" onerror="this.replaceWith(document.createRange().createContextualFragment(ART.code))"></div><div class="meta"><span>${tag}</span><span>GitHub ↗</span></div><h3>${name}</h3><p>${blurb}</p><span class="more">Open repository →</span>`;
     gh.appendChild(a);
   });
 })();
@@ -581,7 +670,8 @@ const REPOS = [
   PROJECTS.forEach((p, i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'proj';
-    b.innerHTML = `<div class="meta"><span>${esc(p.where)}</span><span>${esc(p.when.split(' – ')[0])}</span></div>
+    const thumb = p.img ? `<div class="thumb"><img src="${p.img}" alt="" loading="lazy"></div>` : p.art ? `<div class="thumb">${ART[p.art]}</div>` : '';
+    b.innerHTML = `${thumb}<div class="meta"><span>${esc(p.where)}</span><span>${esc(p.when.split(' – ')[0])}</span></div>
       <h3>${esc(p.title)}</h3><p>${esc(p.blurb)}</p>
       <span class="more">${p.docs.length ? `<span class="doccount">${p.docs.length} document${p.docs.length > 1 ? 's' : ''}</span> ·` : ''} View details →</span>`;
     b.addEventListener('click', () => open(i));
@@ -592,6 +682,8 @@ const REPOS = [
     dlg.innerHTML = `<div class="dlg">
       <div class="dlg-head"><div><div class="meta">${esc(p.where)} · ${esc(p.when)}</div><h3 id="dlgTitle">${esc(p.title)}</h3></div>
       <button class="close" type="button" aria-label="Close">×</button></div>
+      ${p.img ? `<img class="dlg-img" src="${p.img}" alt="">` : p.art ? `<div class="dlg-art">${ART[p.art]}</div>` : ''}
+      ${(p.gallery || []).map(g => `<img class="dlg-img" src="${g}" alt="" loading="lazy">`).join('')}
       <ul>${p.points.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
       <div class="pills">${p.tags.split(' · ').map(t => `<span class="pill">${esc(t)}</span>`).join('')}</div>
       ${p.docs.length ? `<div class="doclist">${p.docs.map(([n, href, info]) =>
