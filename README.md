@@ -40,7 +40,7 @@ npm start          # serve dist/ on $PORT (default 8080)
    The free Starter tier needs no billing, but it isn't available for Google Workspace accounts or accounts that have had paid Google Cloud billing; otherwise link a Google Cloud project with billing.
 
 ## Edit content
-- Industry projects (names only): the `INDUSTRY` list near the bottom of `index.html`. Add a line like `['Project name', 'Sandisk · 2027'],` at the top.
+- Industry Contribution tiles (names only): the `INDUSTRY` list near the bottom of `index.html`. Add a line like `['Project name', 'Sandisk · 2027'],` and a new tile appears.
 - Projects and their documents: the `PROJECTS` list near the bottom of `index.html`.
 - GitHub repositories shown: the `REPOS` list just above it.
 - To add a document, drop the PDF into `docs/` and add `['Name', 'docs/file.pdf', 'pages']` to a project's `docs`.
