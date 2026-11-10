@@ -133,6 +133,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .sub-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 26px 0 4px; }
 .sub-head h3 { margin: 0; font: 500 12px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .16em; color: var(--accent-hi); }
 .rail-nav { display: flex; gap: 8px; }
+.rail-nav[hidden] { display: none; }
 .rail-nav button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font-size: 16px; cursor: pointer; transition: background .2s, border-color .2s, transform .15s; }
 .rail-nav button:disabled { opacity: .35; cursor: default; }
 .rail-nav button:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
@@ -158,6 +159,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .c-rose { background: #ffb3b5; color: #2a0609; }
 .c-ink { background: #0e0d0e; color: var(--fg); border-color: rgba(227, 38, 45, .45); }
 .tile ul { margin: 0; padding: 0; list-style: none; }
+.ind-tile h3 { font-size: clamp(22px, 2.2vw, 28px); margin-top: auto; }
 .names li { font-family: var(--font-display); font-weight: 600; font-size: 18px; padding: 8px 0; border-top: 1px solid rgba(0,0,0,.12); display: flex; align-items: center; gap: 10px; }
 .names li img { width: 64px; height: auto; }
 .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto !important; }
@@ -424,6 +426,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <a class="mark" href="#home">amit<span>/</span>ranjan</a>
     <nav aria-label="Sections">
       <a href="#story">My story</a>
+      <a href="#industry">Industry</a>
       <a href="#academics">Academics</a>
       <a href="#skills">Skills</a>
       <a href="#novelty">Novelty</a>
@@ -515,12 +518,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
             <p>NAND device validation and reliability checks.</p>
             <span class="foot">Sandisk</span>
           </article>
-          <article class="tile c-light" data-build="box" id="industryTile">
-            <span class="k">Industry projects</span>
-            <h3>At Sandisk</h3>
-            <ul class="names" id="industryList"></ul>
-            <span class="foot">Details are confidential</span>
-          </article>
           <article class="tile c-wine" data-build="box">
             <span class="k">M.Tech domain · 2024–2026</span>
             <h3>Power semiconductor devices in TCAD</h3>
@@ -550,12 +547,26 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
   </section>
 
+  <!-- ===================== INDUSTRY CONTRIBUTION ===================== -->
+  <section id="industry">
+    <div class="wrap">
+      <div class="panel">
+        <div class="panel-head">
+          <div><p class="kicker">02 · At Sandisk</p><h2 data-build="text">Industry Contribution</h2></div>
+          <div class="rail-nav" data-for="industryRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div>
+        </div>
+        <p class="lede">What I have worked on as a Product Development Engineer at Sandisk. Industry work is confidential, so only project names are listed.</p>
+        <div class="rail" id="industryRail"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== ACADEMIC JOURNEY ===================== -->
   <section id="academics">
     <div class="wrap">
       <div class="panel">
         <div class="panel-head">
-          <div><p class="kicker">02 · Education</p><h2 data-build="text">My Academic Journey So Far</h2></div>
+          <div><p class="kicker">03 · Education</p><h2 data-build="text">My Academic Journey So Far</h2></div>
         </div>
         <div class="sub-head"><h3>Degrees</h3></div>
         <div class="rail" id="eduRail">
@@ -591,7 +602,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <div class="wrap">
       <div class="panel">
         <div class="panel-head">
-          <div><p class="kicker">03 · Skills &amp; projects</p><h2 data-build="text">My Skill Universe</h2></div>
+          <div><p class="kicker">04 · Skills &amp; projects</p><h2 data-build="text">My Skill Universe</h2></div>
         </div>
         <div class="sub-head"><h3>Skills</h3><div class="rail-nav" data-for="skillRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div></div>
         <div class="rail" id="skillRail">
@@ -614,7 +625,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <div class="wrap">
       <div class="panel">
         <div class="panel-head">
-          <div><p class="kicker">04 · Publication &amp; patent</p><h2 data-build="text">My Novelty</h2></div>
+          <div><p class="kicker">05 · Publication &amp; patent</p><h2 data-build="text">My Novelty</h2></div>
         </div>
         <div class="split">
           <div class="side-label"><span>The Originals</span></div>
@@ -794,8 +805,11 @@ const PROJECTS = [
 ];
 
 // Industry projects: names only (confidential). Add new ones at the top: ['Project name', 'Company · Year', 'logo path (optional)'].
+// Industry contribution tiles (names only: Sandisk work is confidential).
+// Add a new project as one more line: ['Project name', 'Sandisk · year'].
 const INDUSTRY = [
-  ['Sample Readiness Portal', 'Sandisk · 2026', 'assets/logos/sandisk.svg']
+  ['NAND device validation & reliability checks', 'Sandisk · 2026 – now'],
+  ['Sample Readiness Portal', 'Sandisk · 2026']
 ];
 
 const REPOS = [
@@ -808,9 +822,14 @@ const REPOS = [
 ];
 
 (() => {
-  const list = document.getElementById('industryList');
-  INDUSTRY.forEach(([name]) => {
-    const li = document.createElement('li'); li.textContent = name; list.appendChild(li);
+  const rail = document.getElementById('industryRail');
+  const colors = ['c-red', 'c-light', 'c-wine', 'c-dark', 'c-rose', 'c-ink'];
+  INDUSTRY.forEach(([name, meta], i) => {
+    const t = document.createElement('article');
+    t.className = 'tile ind-tile ' + colors[i % colors.length]; t.dataset.build = 'box';
+    t.innerHTML = '<span class="logo wide"><img src="assets/logos/sandisk.svg" alt="Sandisk"></span><span class="k"></span><h3></h3><span class="foot">Confidential · details not shared</span>';
+    t.querySelector('.k').textContent = meta; t.querySelector('h3').textContent = name;
+    rail.appendChild(t);
   });
 })();
 
