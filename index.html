@@ -185,6 +185,19 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .tile:hover img, .rail .fig:hover img { transform: scale(1.04); }
 .tile .logo img, .tile:hover .logo img { transform: none; }
 
+.story { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 8px; }
+.chapter { position: relative; border-radius: 22px; padding: 22px 24px; background: rgba(255,255,255,.03); border: 1px solid var(--line); transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s; }
+.chapter:hover { transform: translateY(-4px); border-color: #ff9a9d; box-shadow: 0 0 0 1px #ff9a9d, 0 18px 40px -16px rgba(255,75,80,.55); }
+.chapter.hi { background: linear-gradient(150deg, rgba(227,38,45,.22), rgba(227,38,45,.06)); border-color: rgba(255,75,80,.45); }
+.chapter .ch { display: block; font: 500 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .14em; color: var(--accent-hi); margin-bottom: 12px; }
+.chapter p { margin: 0; font-size: clamp(15.5px, 1.4vw, 17px); line-height: 1.62; color: var(--muted); }
+.chapter p b { color: var(--fg); font-weight: 600; }
+.chapter p em { color: var(--fg); font-style: italic; }
+.story-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 20px 0 4px; }
+.story-cta span { font: 500 12px var(--font-mono); color: var(--muted); }
+.story-rail-head { margin-top: 30px; }
+@media (max-width: 760px) { .story { grid-template-columns: minmax(0, 1fr); } }
+
 /* The Originals: vertical label beside the tiles */
 .split { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; }
 .side-label { position: relative; border-radius: 20px; background: linear-gradient(180deg, #ff4b50, #8e0e16); display: grid; place-items: center; }
@@ -464,9 +477,36 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="panel">
         <div class="panel-head">
           <div><p class="kicker">01 · About me</p><h2 data-build="text">My Full Story</h2></div>
+          <a class="btn small" href="docs/Amit_Ranjan_Sahu_Resume.pdf" download>Download resume ↓</a>
+        </div>
+        <div class="story">
+          <div class="chapter" data-build="box">
+            <span class="ch">Chapter 1 · Curiosity</span>
+            <p>It started with a simple question during my B.Tech in Electronics &amp; Communication at AKTU: <em>what actually happens inside a chip?</em> Circuits on paper weren't enough, so I chased the answer outside the classroom too, through NPTEL's Digital Circuits course and industrial training at BRBRAITT.</p>
+          </div>
+          <div class="chapter" data-build="box">
+            <span class="ch">Chapter 2 · Going deep</span>
+            <p>That question took me to <b>IIT Bhubaneswar</b> for an M.Tech in Semiconductor Technology &amp; Chip Design, on a <b>Samsung fellowship</b> through the ISWDP program with Synopsys and IISc. I learned to build devices one layer at a time, simulating them in <b>Sentaurus TCAD</b>, measuring power MOSFETs across temperature in the lab, and working on MoS₂ photodiodes and gas sensors.</p>
+          </div>
+          <div class="chapter hi" data-build="box">
+            <span class="ch">Chapter 3 · Something new</span>
+            <p>For my research I took on a hard problem in <b>power semiconductor devices</b>: stopping a 1.7 kV-class 4H-SiC superjunction diode from breaking down at its edges. I proposed a new wide-trench termination that needs no extra implant and still reaches <b>about 95% of the ideal breakdown voltage</b>. The project earned a <b>perfect 10/10</b>. The paper was <b>accepted for oral presentation at PCIM India 2026</b>, and a <b>patent is being filed</b>. Along the way I also taught, as a teaching assistant in the VLSI Design Lab and as an instructor at a chip design workshop.</p>
+          </div>
+          <div class="chapter" data-build="box">
+            <span class="ch">Chapter 4 · Today</span>
+            <p>Since July 2026 I have been a <b>Product Development Engineer at Sandisk</b>, working on <b>NAND device validation and reliability checks</b>, where the device physics I learned meets products people use every day. The question from Chapter 1 hasn't changed. I just get to answer it at scale now.</p>
+          </div>
+        </div>
+        <div class="story-cta">
+          <a class="btn primary" href="docs/Amit_Ranjan_Sahu_Resume.pdf" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>
+            Download my resume
+          </a>
+          <span>PDF · the full story on one page</span>
+        </div>
+        <div class="sub-head story-rail-head"><h3>Highlights</h3>
           <div class="rail-nav" data-for="storyRail"><button type="button" class="prev" aria-label="Scroll left">←</button><button type="button" class="next" aria-label="Scroll right">→</button></div>
         </div>
-        <p class="lede">I am a <b>Product Development Engineer at Sandisk</b>, where I work on <b>NAND device validation and reliability checks</b>. I studied Electronics &amp; Communication Engineering at AKTU, then did my M.Tech in Semiconductor Technology &amp; Chip Design at <b>IIT Bhubaneswar</b>. There I used <b>Sentaurus TCAD</b> to design <b>power semiconductor devices</b>: a 1.7 kV-class 4H-SiC superjunction diode with a new edge termination.</p>
         <div class="rail" id="storyRail">
           <article class="tile c-red" data-build="box">
             <span class="k">Now · since Jul 2026</span>
