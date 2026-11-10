@@ -5,7 +5,7 @@ A single-page static site. No build step, no dependencies.
 ```
 index.html                 the whole site (HTML, CSS and JavaScript)
 assets/amit-portrait.jpg   portrait on the red background
-docs/                      resume, PCIM India 2026 paper and slides (thesis held until the patent is filed)
+docs/                      resume and PCIM India 2026 paper (thesis held until the patent is filed)
 ```
 
 ## Run it locally
