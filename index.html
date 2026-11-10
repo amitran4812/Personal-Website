@@ -1034,8 +1034,10 @@ const REPOS = [
     }
     function go() { if (resolveAt === Infinity) resolveAt = performance.now(); }
     addEventListener('scroll', () => { if (scrollY > 30) go(); }, { passive: true });
-    fetch('assets/holo.bin').then(r => { if (!r.ok) throw 0; return r.arrayBuffer(); }).then(buf => {
-      const dv = new DataView(buf);
+    fetch('assets/holo.json').then(r => { if (!r.ok) throw 0; return r.json(); }).then(j => {
+      const raw = atob(j.data), u8 = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) u8[i] = raw.charCodeAt(i);
+      const dv = new DataView(u8.buffer);
       W0 = dv.getUint16(0, true); H0 = dv.getUint16(2, true); neck = dv.getUint16(4, true);
       const n = dv.getUint16(6, true);
       P = new Float32Array(n * 4);
